@@ -12,6 +12,21 @@ const VIDEO_FRAME_HOSTS = ["https://www.youtube-nocookie.com"];
 const VIDEO_IMAGE_HOSTS = ["https://i.ytimg.com"];
 
 /**
+ * The Supabase project origin, read from the public env var. The admin signs in
+ * and uploads straight from the browser, and the public site loads storage
+ * images and preview clips, so this origin has to be allowed for connections,
+ * images and media. Empty (and omitted from the policy) when Supabase is unset.
+ */
+const SUPABASE_ORIGIN = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : "";
+  } catch {
+    return "";
+  }
+})();
+const SUPABASE_WS = SUPABASE_ORIGIN ? SUPABASE_ORIGIN.replace(/^https/, "wss") : "";
+
+/**
  * `script-src` keeps `'unsafe-inline'` deliberately: Next emits inline
  * bootstrap and hydration scripts whose content changes every build, and a
  * nonce would force every page to render dynamically. External `<script src>`
@@ -29,10 +44,10 @@ const csp = [
   // allowed while `next dev` is running.
   `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: blob: ${VIDEO_IMAGE_HOSTS.join(" ")}`,
-  "media-src 'self' blob:",
+  `img-src 'self' data: blob: ${[...VIDEO_IMAGE_HOSTS, SUPABASE_ORIGIN].filter(Boolean).join(" ")}`,
+  `media-src 'self' blob: ${SUPABASE_ORIGIN}`.trim(),
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src ${["'self'", SUPABASE_ORIGIN, SUPABASE_WS].filter(Boolean).join(" ")}`,
   "manifest-src 'self'",
   "worker-src 'self' blob:",
   `frame-src ${VIDEO_FRAME_HOSTS.join(" ")}`,
@@ -61,7 +76,7 @@ const nextConfig: NextConfig = {
     qualities: [75, 85],
     // Photographs and posters are local. Only provider thumbnails are remote,
     // so the optimizer is scoped to exactly those hosts and 404s everything else.
-    remotePatterns: VIDEO_IMAGE_HOSTS.map((h) => ({
+    remotePatterns: [...VIDEO_IMAGE_HOSTS, SUPABASE_ORIGIN].filter(Boolean).map((h) => ({
       protocol: "https" as const,
       hostname: new URL(h).hostname,
     })),
