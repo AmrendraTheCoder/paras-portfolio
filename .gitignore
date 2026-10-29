@@ -1,0 +1,32 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# env: never commit keys
+.env
+.env*.local
+
+# misc
+.DS_Store
+*.pem
+/coverage
+
+# vercel / typescript
+.vercel
+*.tsbuildinfo
+.env*
+
+# Python bytecode from the local skill scripts. These were tracked and got
+# deleted incidentally by a `git add -A`; ignoring them stops that recurring.
+__pycache__/
+*.pyc
+
+# full-quality video masters stay out of git; previews only
+/public/videos/full/

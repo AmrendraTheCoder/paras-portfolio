@@ -1,0 +1,698 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   AVS. Claude design language, Anthropic token set.
+   Source of truth for every colour, type step, radius and easing in the app.
+   Light = the Claude cream canvas. Dark = the Claude product surface.
+   ========================================================================= */
+
+@theme {
+  /* --- Brand ------------------------------------------------------------ */
+  --color-clay: #cc785c;
+  --color-clay-active: #a9583e;
+  --color-clay-disabled: #e6dfd8;
+  --color-teal: #5db8a6;
+  --color-amber: #e8a55a;
+  /* Creative accents: acid on the dark canvas, electric blue on the light. */
+  --color-acid: #c0fe04;
+  --color-electric: #1e60ff;
+
+  /* --- Surfaces (cream) -------------------------------------------------- */
+  --color-canvas: #faf9f5;
+  --color-soft: #f5f0e8;
+  --color-card: #efe9de;
+  --color-cream-strong: #e8e0d2;
+  --color-hairline: #e6dfd8;
+  --color-hairline-soft: #ebe6df;
+
+  /* --- Surfaces (dark) --------------------------------------------------- */
+  --color-dark: #0b0b0c;
+  --color-dark-elevated: #17171b;
+  --color-dark-soft: #121215;
+
+  /* --- Text -------------------------------------------------------------- */
+  --color-ink: #141413;
+  --color-body: #3d3d3a;
+  --color-body-strong: #252523;
+  --color-muted: #6c6a64;
+  --color-muted-soft: #8e8b82;
+  --color-on-dark: #faf9f5;
+  --color-on-dark-soft: #9a9aa3;
+
+  /* --- Semantic ---------------------------------------------------------- */
+  --color-success: #5db872;
+  --color-warning: #d4a017;
+  --color-error: #c64545;
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-display: "Copernicus", "Tiempos Headline", var(--font-serif), ui-serif,
+    Georgia, serif;
+  --font-sans: "StyreneB", var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", monospace;
+
+  /* --- Radii ------------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-bento: 24px;
+
+  /* --- Motion ------------------------------------------------------------
+     Anthropic does not publish easing tokens, so these are ours. Every
+     transition in the app must use one of them. No ad-hoc cubic-beziers. */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-micro: 180ms;
+  --duration-base: 280ms;
+  --duration-slow: 560ms;
+}
+
+/* ---------------------------------------------------------------------------
+   Semantic aliases. Components reference these, never the raw ramp, so that
+   dark mode is a single block of overrides rather than a dual-class sprawl.
+   ------------------------------------------------------------------------ */
+:root {
+  --bg: var(--color-canvas);
+  --bg-band: #f4f1ea;
+  --bg-raised: #ffffff;
+  --bg-tile: #ffffff;
+  --bg-tile-hover: var(--color-soft);
+  --fg: var(--color-ink);
+  --fg-body: var(--color-body);
+  --fg-muted: var(--color-muted);
+  --line: var(--color-hairline);
+  --line-strong: var(--color-cream-strong);
+  --accent: var(--color-electric);
+  /* Clay at #cc785c is a 3.1:1 pair with cream: fine for a 24px fill or a
+     border, not for 11–13px type. Small accent text uses the darker step. */
+  --accent-text: #1a4fd1;
+  --accent-ink: #ffffff;
+  --shadow-tile: 0 1px 2px rgb(20 20 19 / 0.04), 0 8px 24px -12px rgb(20 20 19 / 0.1);
+  --shadow-lift: 0 2px 4px rgb(20 20 19 / 0.05), 0 24px 48px -20px rgb(20 20 19 / 0.22);
+  --grain-opacity: 0.035;
+  /* Sectional watermark. 3.8% vanished entirely on cream; this is the
+     lowest value that still reads as a shape at 300px. */
+  --ghost-opacity: 0.062;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: var(--color-dark);
+  --bg-band: #0f0f12;
+  --bg-raised: var(--color-dark-soft);
+  --bg-tile: var(--color-dark-elevated);
+  --bg-tile-hover: #1f1f25;
+  --fg: var(--color-on-dark);
+  --fg-body: #c9c9d1;
+  --fg-muted: var(--color-on-dark-soft);
+  --line: #26262c;
+  --line-strong: #34343b;
+  --accent: var(--color-acid);
+  /* On the dark canvas the base accent already clears AA, so no darker step. */
+  --accent-text: var(--color-acid);
+  --accent-ink: #0b0b0c;
+  --shadow-tile: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.55);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.45), 0 24px 48px -20px rgb(0 0 0 / 0.7);
+  --grain-opacity: 0.055;
+  /* Light-on-dark at low alpha carries less than dark-on-light. */
+  --ghost-opacity: 0.075;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg-body);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Paper grain. The cream canvas reads flat and digital without it. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--fg);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 26%, transparent);
+    color: var(--fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  a,
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* The bento tile. One class, because every tile on the page is this shape. */
+  .tile {
+    position: relative;
+    border-radius: var(--radius-bento);
+    background-color: var(--bg-tile);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-tile);
+    transition:
+      background-color var(--duration-micro) var(--ease-out-quint),
+      border-color var(--duration-micro) var(--ease-out-quint),
+      box-shadow var(--duration-base) var(--ease-out-quint);
+  }
+
+  .tile-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-muted);
+    letter-spacing: 0.01em;
+  }
+
+  .tile-value {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    /* 12px on a phone, 11px once there is a monitor's worth of distance.
+       The audit found 52 elements under 11px at 375px wide. */
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+
+  @media (min-width: 640px) {
+    .eyebrow {
+      font-size: 11px;
+    }
+  }
+}
+
+@layer utilities {
+  /* ---------------------------------------------------------------------
+     Vertical rhythm. Uniform padding on every section is why the old page
+     read as a stack of floating blocks: nothing grouped, nothing led.
+     Three steps instead, assigned by weight of content.
+     ------------------------------------------------------------------ */
+  .section-rhythm {
+    padding-block: clamp(88px, 10vw, 136px);
+  }
+
+  /* For the heavyweight sections (work, skills) that need room to breathe. */
+  .section-rhythm-lg {
+    padding-block: clamp(112px, 13vw, 184px);
+  }
+
+  /* For short lists that would look marooned in a full band. */
+  .section-rhythm-sm {
+    padding-block: clamp(64px, 7vw, 96px);
+  }
+
+  /* A tinted band. Alternating these is what makes adjacent sections read as
+     separate rooms rather than one undifferentiated scroll. */
+  .band {
+    background-color: var(--bg-band);
+    border-block: 1px solid var(--line);
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 1140px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 48px);
+  }
+
+  .shell-narrow {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 48px);
+  }
+}
+
+/* Marquee. Translating exactly -50% of a doubled track puts the seam on an
+   identical frame, so the loop has no visible jump. */
+/* Marquee. The shift is one copy of however many were needed to cover the
+   width, so the seam lands on an identical frame at any list length. Hard-coding
+   -50% only worked while exactly two copies were rendered and one of them was
+   wider than the screen; a short list left visible empty band mid-scroll. */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--marquee-shift, -50%), 0, 0);
+  }
+}
+
+.marquee-track {
+  animation: marquee var(--marquee-duration, 46s) linear infinite;
+}
+
+/* Hard stop for every animation when the OS asks for one. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Post body.
+   
+   The site sets type per component, but a post body is written, not composed:
+   the author types `## ` and a heading has to already be right. So the scale
+   lives here once, and both the published page and the editor's preview pane
+   wear the same class, which is what keeps the preview honest.
+   
+   The measure is 68ch on the paragraph rather than on the container, so a
+   figure, a table or a code block can run wider than the text it sits in.
+--------------------------------------------------------------------------- */
+.mdx {
+  /* The measure lives here, on the container, and nowhere else.
+     It used to sit on `p` (68ch) while the column was wider, so every
+     paragraph stopped short of its own column and left a ragged strip of
+     empty page beside it, while a Callout or an image ran the full width and
+     made the gap obvious. One place to set it, and everything inside fills it.
+
+     A length rather than `ch`, because the grid track and the paragraph
+     resolve `ch` against different fonts and the two never quite agreed. */
+  --measure: 44rem;
+  /* Kept below the grid gap on purpose. Spill wider than the gutter and a
+     code block would slide underneath the rails. */
+  --breakout: clamp(0px, 2.5vw, 56px);
+
+  max-width: var(--measure);
+  font-size: 18px;
+  line-height: 1.72;
+  color: var(--fg-body);
+}
+
+.mdx > * + * {
+  margin-block-start: 1.35em;
+}
+
+.mdx p,
+.mdx li {
+  /* Stops a paragraph ending on a single stranded word. The browser reflows
+     the last few lines to pull a companion down with it, which is the whole
+     complaint about sentences "ending in a weird way". Ignored by browsers
+     that do not support it, which costs nothing. */
+  text-wrap: pretty;
+}
+
+.mdx h2,
+.mdx h3,
+.mdx h4 {
+  font-family: var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  /* No max-width: the column is already the measure. What a heading needs is
+     not a narrower box but even lines, which is the property below. */
+  /* Splits a heading into lines of similar length rather than filling the
+     first and leaving a runt. This is the property that fixes the orphan,
+     and the max-width above only stops a very long heading running the full
+     width of a wide column. */
+  text-wrap: balance;
+}
+
+/* Headings own the space above them, not the paragraph below. Otherwise the
+   gap changes depending on what happened to precede the heading. */
+.mdx h2 {
+  font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+  margin-block-start: 2.4em;
+}
+
+.mdx h3 {
+  font-size: clamp(1.25rem, 2vw, 1.45rem);
+  margin-block-start: 2em;
+}
+
+.mdx h4 {
+  font-size: 1.15rem;
+  margin-block-start: 1.8em;
+}
+
+.mdx h2 + *,
+.mdx h3 + *,
+.mdx h4 + * {
+  margin-block-start: 0.7em;
+}
+
+.mdx a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in oklab, var(--accent-text) 40%, transparent);
+  transition: text-decoration-color var(--duration-micro) var(--ease-out-quint);
+}
+
+.mdx a:hover {
+  text-decoration-color: var(--accent-text);
+}
+
+.mdx strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.mdx ul,
+.mdx ol {
+  padding-inline-start: 1.3em;
+}
+
+.mdx ul {
+  list-style: disc;
+}
+
+.mdx ol {
+  list-style: decimal;
+}
+
+.mdx li + li {
+  margin-block-start: 0.5em;
+}
+
+.mdx li::marker {
+  color: var(--accent-text);
+}
+
+.mdx blockquote {
+  border-inline-start: 2px solid var(--accent);
+  padding-inline-start: 1.25em;
+  font-family: var(--font-display);
+  font-size: 1.1em;
+  line-height: 1.55;
+  color: var(--fg);
+}
+
+.mdx code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--bg-tile-hover);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  padding: 0.12em 0.38em;
+}
+
+.mdx pre {
+  background: var(--bg-tile);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.25rem;
+  overflow-x: auto;
+  font-size: 13.5px;
+  line-height: 1.62;
+}
+
+/* The border and padding belong to the block, not to every token inside it. */
+.mdx pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* A scrollable region has to be reachable without a mouse, and it has to show
+   where focus is when it gets there. */
+.mdx pre:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.mdx img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+}
+
+.mdx hr {
+  border: 0;
+  border-block-start: 1px solid var(--line);
+  margin-block: 3em;
+}
+
+.mdx table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15.5px;
+}
+
+.mdx th,
+.mdx td {
+  border-block-end: 1px solid var(--line);
+  padding: 0.65em 0.9em;
+  text-align: start;
+}
+
+.mdx th {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+}
+
+/* Things that are better wide.
+   
+   Prose is capped at the measure because long lines are hard to read. A
+   diagram, a table or a block of code has no such limit, and cramming one into
+   the text column wastes the page. These spill symmetrically into the gutters,
+   which is why the extra width now reads as deliberate rather than as the
+   leftover gap it used to be.
+   
+   The spill is a vw clamp, so on a phone it collapses to nothing and cannot
+   push the page sideways. */
+/* Note the absence of `aside`. A Callout is prose: it holds sentences, and
+   sentences want the measure. Letting it break out made a block of text
+   wider than the paragraphs around it, which reads as a mistake rather
+   than as emphasis. Only things with no natural line length spill. */
+.mdx figure,
+.mdx pre,
+.mdx table,
+.mdx > img {
+  width: calc(100% + var(--breakout) * 2);
+  margin-inline: calc(var(--breakout) * -1);
+  max-width: none;
+}
+
+/* ---------------------------------------------------------------------------
+   The sectional watermark, and the light that moves through it.
+
+   Two layers painted into the same text: a flat base so the word is always
+   legible as a watermark, and a coral pool positioned at the pointer. Both are
+   clipped to the glyphs, so the light only ever exists inside the letters and
+   never becomes a shape floating over the page.
+
+   `--lit` is driven from the component and fades the pool in and out as the
+   pointer enters and leaves the band, so a word nobody is pointing at looks
+   exactly as it always did.
+--------------------------------------------------------------------------- */
+.ghost-word {
+  --lx: 50%;
+  --ly: 50%;
+  --lit: 0;
+
+  background-image:
+    radial-gradient(
+      42rem 42rem at var(--lx) var(--ly),
+      color-mix(in oklab, var(--accent) calc(var(--lit) * 62%), transparent) 0%,
+      color-mix(in oklab, var(--accent) calc(var(--lit) * 22%), transparent) 38%,
+      transparent 68%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in oklab, var(--fg) 100%, transparent),
+      color-mix(in oklab, var(--fg) 100%, transparent)
+    );
+  background-repeat: no-repeat;
+
+  /* The clip is the whole idea: paint is only allowed where a glyph is. */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  /* The base fill stays at the old watermark weight. The pool above it is what
+     brightens, so the word never becomes loud enough to compete with the copy
+     sitting in front of it. */
+  opacity: var(--ghost-opacity);
+}
+
+/* Nothing moves, and the word is the flat watermark it has always been. */
+@media (prefers-reduced-motion: reduce) {
+  .ghost-word {
+    background-image: none;
+    color: var(--fg);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   The pointer.
+
+   A coral dot inside a ring that trails it. Over anything clickable the dot
+   turns white and the ring opens into a coral outline; over a field the ring
+   becomes a caret. No labels, no fills, no per-brand colours: a cursor that
+   reads as a caption competes with the page it is pointing at.
+
+   Deliberately NOT `mix-blend-mode`. Two attempts failed, and the second is the
+   instructive one:
+
+     1. `filter: invert(1)` on a blended element creates a stacking context,
+        which isolates it, and an isolated element does not blend at all.
+     2. Removing the filter did not help either, because the parent
+        `.cursor-layer` is `position: fixed; z-index: 9999`, and that is itself
+        a stacking context. An element only blends with the backdrop inside its
+        own stacking context, and the inside of that layer is empty. So the
+        bodies differenced against nothing and painted plain white, which on the
+        cream theme is an invisible cursor on a white page.
+
+   Solid colour plus a halo instead. No ancestor can switch that off.
+--------------------------------------------------------------------------- */
+.cursor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Applied only after the component mounts. If the script never runs, the
+   browser keeps its own cursor, which is the difference between a stylish
+   pointer and a page you cannot use. */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  border-radius: 999px;
+  will-change: transform;
+  transition:
+    background-color 160ms var(--ease-out-quint),
+    border-color 160ms var(--ease-out-quint),
+    opacity 180ms linear;
+}
+
+/* Coral at rest. The halo keeps it legible crossing a dark image or the coral
+   button itself, where a flat coral dot would disappear into its own colour. */
+.cursor-dot {
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--bg) 72%, transparent);
+}
+
+/* White over anything clickable. The ring behind it is only an outline now, so
+   the dot keeps a ring of ink around it instead of a background-coloured halo:
+   white on cream with a cream halo is a white dot on a white page. */
+.cursor-dot[data-mode="link"] {
+  background: #fff;
+  box-shadow: 0 0 0 1.5px var(--fg);
+}
+
+/* The caret does the work in a field; the dot would only be a speck on it. */
+.cursor-dot[data-mode="text"] {
+  opacity: 0 !important;
+}
+
+.cursor-ring {
+  /* 32px base, 1.45 on hover, so the widest it ever gets is ~46px. */
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--fg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent);
+}
+
+/* Opens, and that is all. The coral fill was doing too much for a state that
+   only needs to say "this does something". */
+/* Opens a little, and takes the accent. The weight change does the work, not
+   the size: a thicker coral ring reads as "this does something" at a glance,
+   where a large one reads as an obstruction.
+
+   No fill of any kind. A tint was tried and is still a fill, and it is also the
+   one thing that makes the ring compete with whatever it is sitting on. */
+.cursor-ring[data-mode="link"] {
+  border-width: 2px;
+  border-color: var(--accent);
+  background: transparent;
+}
+
+.cursor-ring[data-mode="text"] {
+  width: 2px;
+  height: 30px;
+  border-radius: 1px;
+  border: 0;
+  background: var(--fg);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent);
+}
+
+/* The clock's colon. Blinks on the minute the way a desk clock does, which is
+   the cheapest possible signal that the number is live rather than printed. */
+@keyframes clock-blink {
+  0%, 45% { opacity: 1; }
+  55%, 100% { opacity: 0.25; }
+}
+
+.clock-colon {
+  animation: clock-blink 2s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clock-colon { animation: none; }
+}
