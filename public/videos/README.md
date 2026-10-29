@@ -1,15 +1,18 @@
 # Videos
 
-Only small preview loops live here. Full videos are hosted off-git (YouTube
-unlisted, Vimeo, Cloudinary or Mux) and referenced from `lib/content.ts` as
-`video.full`.
+Only small preview loops live here. Full videos are **unlisted YouTube
+uploads**, referenced from `lib/content.ts` as `video.full` (paste the normal
+watch URL, `https://www.youtube.com/watch?v=…` or `https://youtu.be/…`). The
+site embeds them with the privacy-enhanced player, which is the only frame the
+Content-Security-Policy allows.
 
 ## Preview loops (committed)
 
 - 720p, H.264 `.mp4` plus a VP9 `.webm`, muted, 4–8 seconds, under ~2 MB each.
 - Named after the project slug: `vivacity-25-preview.mp4` / `.webm`.
-- The hero showreel is `showreel.mp4` / `showreel.webm`; keep it under ~6 MB
-  or host the full-quality version externally and point `showreel.full` at it.
+- The hero showreel loop is `showreel.mp4` / `showreel.webm`. Keep it under
+  ~6 MB; if the full-quality reel is bigger, upload it to YouTube too and point
+  `showreel.full` at that URL.
 
 Suggested ffmpeg (from a trimmed master clip):
 

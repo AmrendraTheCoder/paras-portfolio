@@ -4,19 +4,12 @@ import type { NextConfig } from "next";
  * Response headers and image policy. Almost everything on this site is static
  * files, so the hardening is all here.
  *
- * Full videos are hosted off-git. Each provider the content file may point at
- * needs its player (frame-src), its media files (media-src), its thumbnails
- * (img-src) and, for HLS players, its API (connect-src) allowed by name. Remove
- * the ones that end up unused once the host is chosen.
+ * Full videos live on YouTube as unlisted uploads and play through the
+ * privacy-enhanced embed, so that player is the only frame allowed and its
+ * thumbnail host the only remote image. Preview loops are self-hosted.
  */
-const VIDEO_FRAME_HOSTS = ["https://www.youtube-nocookie.com", "https://player.vimeo.com"];
-const VIDEO_MEDIA_HOSTS = ["https://res.cloudinary.com", "https://stream.mux.com"];
-const VIDEO_IMAGE_HOSTS = [
-  "https://i.ytimg.com",
-  "https://i.vimeocdn.com",
-  "https://res.cloudinary.com",
-  "https://image.mux.com",
-];
+const VIDEO_FRAME_HOSTS = ["https://www.youtube-nocookie.com"];
+const VIDEO_IMAGE_HOSTS = ["https://i.ytimg.com"];
 
 /**
  * `script-src` keeps `'unsafe-inline'` deliberately: Next emits inline
@@ -37,9 +30,9 @@ const csp = [
   `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${VIDEO_IMAGE_HOSTS.join(" ")}`,
-  `media-src 'self' blob: ${VIDEO_MEDIA_HOSTS.join(" ")}`,
+  "media-src 'self' blob:",
   "font-src 'self'",
-  `connect-src 'self' ${VIDEO_MEDIA_HOSTS.join(" ")}`,
+  "connect-src 'self'",
   "manifest-src 'self'",
   "worker-src 'self' blob:",
   `frame-src ${VIDEO_FRAME_HOSTS.join(" ")}`,

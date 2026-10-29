@@ -7,6 +7,8 @@ import { Reveal } from "@/components/reveal";
 import { CaseVideo } from "@/components/media/case-video";
 import { ArrowUpRightIcon } from "@/components/icons";
 import { projects, projectBySlug, site, isPlaceholder } from "@/lib/content";
+import { jsonLdScript } from "@/lib/json-ld";
+import { youtubeId } from "@/lib/video";
 
 export const dynamicParams = false;
 
@@ -53,8 +55,31 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   const prev = projects[(index - 1 + projects.length) % projects.length];
   const next = projects[(index + 1) % projects.length];
 
+  /**
+   * VideoObject structured data, only once the film is really on YouTube and
+   * the title is real. Search engines show a video result for a page that
+   * carries this; a placeholder would only teach them a page that is not there.
+   */
+  const yt = youtubeId(p.video.full);
+  const videoLd =
+    yt && !isPlaceholder(p.title)
+      ? {
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: p.title,
+          description: isPlaceholder(p.story) ? `${p.title}, ${p.client}.` : p.story,
+          thumbnailUrl: [`${site.url}${p.video.poster}`],
+          contentUrl: `https://www.youtube.com/watch?v=${yt}`,
+          embedUrl: `https://www.youtube-nocookie.com/embed/${yt}`,
+          author: { "@type": "Person", "@id": `${site.url}#person` },
+        }
+      : null;
+
   return (
     <>
+      {videoLd ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(videoLd) }} />
+      ) : null}
       <Nav />
       <main id="main" className="relative z-10" style={{ "--tint": p.tint } as React.CSSProperties}>
         <article className="shell pt-28 pb-20 sm:pt-32 sm:pb-28">

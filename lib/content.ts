@@ -81,13 +81,14 @@ export const photographyInstagram = socials[1];
 /* ---------------------------------------------------------------------------
    Video.
 
-   Full videos are never committed to git. `full` is a YouTube (unlisted),
-   Vimeo, Cloudinary or Mux URL; the player works out which from the host.
+   Full videos are never committed to git. `full` is the URL of an unlisted
+   YouTube upload (youtube.com/watch?v=… or youtu.be/…); the case-study page
+   and the modal embed it with the privacy-enhanced player.
    Previews are the only video files in /public/videos: 720p, H.264 mp4 plus a
    webm, under ~2 MB each, muted loops of a few seconds.
    ------------------------------------------------------------------------ */
 export type VideoSource = {
-  /** YouTube / Vimeo page or embed URL, or a direct .mp4 (Cloudinary, Mux). */
+  /** Unlisted YouTube URL. A direct .mp4 path also works for a local file. */
   full?: string;
   /** Small muted loop for the card hover and the hero. */
   previewMp4?: string;
@@ -99,6 +100,8 @@ export type VideoSource = {
 };
 
 export const showreel: VideoSource = {
+  // "Play with sound" opens this. The brief keeps the showreel at
+  // /videos/showreel.mp4; swap in a YouTube URL if the file ends up large.
   full: "/videos/showreel.mp4",
   previewMp4: "/videos/showreel.mp4",
   previewWebm: "/videos/showreel.webm",
@@ -145,7 +148,7 @@ export const projects: Project[] = [
     status: "released",
     tint: "#ff8a3d",
     video: {
-      full: undefined,
+      full: "[PLACEHOLDER YouTube unlisted URL]",
       previewMp4: "/videos/vivacity-25-preview.mp4",
       previewWebm: "/videos/vivacity-25-preview.webm",
       poster: "/posters/vivacity-25.svg",
@@ -163,7 +166,7 @@ export const projects: Project[] = [
     status: "released",
     tint: "#22d3ee",
     video: {
-      full: undefined,
+      full: "[PLACEHOLDER YouTube unlisted URL]",
       previewMp4: "/videos/desportivos-25-preview.mp4",
       previewWebm: "/videos/desportivos-25-preview.webm",
       poster: "/posters/desportivos-25.svg",
@@ -182,7 +185,7 @@ export const projects: Project[] = [
     theme: "Anachronic Melange: desi maximalism, full of high colour.",
     tint: "#ff2d87",
     video: {
-      full: undefined,
+      full: "[PLACEHOLDER YouTube unlisted URL]",
       previewMp4: "/videos/vivacity-26-preview.mp4",
       previewWebm: "/videos/vivacity-26-preview.webm",
       poster: "/posters/vivacity-26.svg",
@@ -200,7 +203,7 @@ export const projects: Project[] = [
     status: "released",
     tint: "#c0fe04",
     video: {
-      full: undefined,
+      full: "[PLACEHOLDER YouTube unlisted URL]",
       previewMp4: "/videos/client-1-preview.mp4",
       previewWebm: "/videos/client-1-preview.webm",
       poster: "/posters/client-1.svg",
@@ -218,7 +221,7 @@ export const projects: Project[] = [
     status: "released",
     tint: "#1e60ff",
     video: {
-      full: undefined,
+      full: "[PLACEHOLDER YouTube unlisted URL]",
       previewMp4: "/videos/client-2-preview.mp4",
       previewWebm: "/videos/client-2-preview.webm",
       poster: "/posters/client-2.svg",
