@@ -19,15 +19,17 @@ const LEANS = [-4.5, 2.5, -1.5, 3.5, -3];
 function Mark({ tool, className }: { tool: Tool; className: string }) {
   if (tool.mark.kind === "path") {
     return (
-      <svg viewBox="0 0 24 24" role="img" aria-hidden className={className}>
-        <path d={tool.mark.d} />
-      </svg>
+      <span className="relative z-10 grid h-9 w-9 place-items-center sm:h-10 sm:w-10">
+        <svg viewBox="0 0 24 24" role="img" aria-hidden className={className}>
+          <path d={tool.mark.d} />
+        </svg>
+      </span>
     );
   }
   return (
     <span
       aria-hidden
-      className="grid h-9 w-9 place-items-center rounded-[6px] font-display text-[15px] font-bold tracking-[-0.03em] sm:h-10 sm:w-10 sm:text-[16px]"
+      className="relative z-10 grid h-9 w-9 place-items-center rounded-[7px] font-display text-[15px] font-bold tracking-[-0.03em] ring-1 ring-white/10 sm:h-10 sm:w-10 sm:text-[16px]"
       style={{ background: tool.mark.bg, color: tool.mark.fg }}
     >
       {tool.mark.letters}
