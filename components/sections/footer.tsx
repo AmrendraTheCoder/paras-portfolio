@@ -14,7 +14,7 @@ export async function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--bg)]">
-      <div className="shell relative pt-20 pb-8 sm:pt-28">
+      <div className="shell relative pt-20 sm:pt-28">
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-7">
             <p className="eyebrow">Next frame</p>
@@ -67,12 +67,12 @@ export async function Footer() {
             </ul>
           </div>
         </div>
+      </div>
 
-        <p
-          aria-hidden
-          className="text-outline pointer-events-none mt-16 select-none whitespace-nowrap font-display text-[clamp(4rem,17vw,15rem)] font-bold uppercase leading-[0.8] tracking-[-0.05em] opacity-60 sm:mt-20"
-          style={{ marginBottom: "-0.28em" }}
-        >
+      {/* Full-bleed wordmark: one line, centred, sized to the viewport so the
+          whole name shows once and never overflows the right edge. */}
+      <div className="relative w-full overflow-hidden" aria-hidden>
+        <p className="text-outline pointer-events-none mt-12 mb-[-0.24em] select-none whitespace-nowrap text-center font-display text-[13.2vw] font-bold uppercase leading-[0.8] tracking-[-0.03em] opacity-55 sm:mt-16">
           {profile.first} {profile.last}
         </p>
       </div>
