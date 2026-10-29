@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { publicAsset } from "@/lib/supabase/config";
 import {
   projects as seedProjects,
@@ -36,7 +36,7 @@ function rowToVideo(r: Record<string, unknown>): VideoSource {
 }
 
 export async function getProjects(): Promise<Project[]> {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   if (!supabase) return seedProjects;
   const { data, error } = await supabase
     .from("projects")
@@ -67,7 +67,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | undefine
 }
 
 export async function getSocials(): Promise<Social[]> {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   if (!supabase) return seedSocials;
   const { data, error } = await supabase
     .from("links")
@@ -89,7 +89,7 @@ export async function getPhotographyLink(): Promise<Social> {
 }
 
 export async function getTimeline(): Promise<Role[]> {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   if (!supabase) return seedExperience;
   const { data, error } = await supabase
     .from("timeline")
@@ -101,7 +101,7 @@ export async function getTimeline(): Promise<Role[]> {
 }
 
 export async function getGalleryPhotos(): Promise<Photo[]> {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   if (!supabase) return seedPhotos();
   const { data, error } = await supabase
     .from("photos")
