@@ -632,3 +632,46 @@
 @media (prefers-reduced-motion: reduce) {
   .clock-colon { animation: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   The hero monument. The giant name is a window: a moving field built from the
+   active event theme's three colours shows through the letters, with a
+   pointer-tracked highlight. @property lets the three colours cross-fade as the
+   world cycles. Reduced motion gets a still gradient fill, no drift, no track.
+--------------------------------------------------------------------------- */
+@property --c1 { syntax: "<color>"; inherits: false; initial-value: #ff2d87; }
+@property --c2 { syntax: "<color>"; inherits: false; initial-value: #ff8a00; }
+@property --c3 { syntax: "<color>"; inherits: false; initial-value: #1fb7a6; }
+@property --c-hi { syntax: "<color>"; inherits: false; initial-value: #ff2d87; }
+
+.hero-monument {
+  --mx: 50%;
+  --my: 42%;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(40vw 40vw at var(--mx) var(--my),
+      color-mix(in oklab, var(--c-hi) 92%, white) 0%,
+      color-mix(in oklab, var(--c-hi) 55%, transparent) 32%,
+      transparent 60%),
+    conic-gradient(from 120deg at 50% 50%, var(--c1), var(--c2), var(--c3), var(--c1)),
+    linear-gradient(120deg, var(--c1), var(--c3));
+  background-size: 150% 150%, 230% 230%, 100% 100%;
+  background-position: center, 0% 50%, 0 0;
+  transition: --c1 1.1s ease, --c2 1.1s ease, --c3 1.1s ease, --c-hi 1.1s ease;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-monument { animation: monument-drift 22s ease-in-out infinite alternate; }
+}
+@keyframes monument-drift {
+  from { background-position: center, 0% 50%, 0 0; }
+  to   { background-position: center, 100% 50%, 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-monument {
+    animation: none;
+    background-image: linear-gradient(120deg, var(--c1), var(--c2), var(--c3));
+  }
+}
