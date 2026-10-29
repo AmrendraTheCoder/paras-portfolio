@@ -17,7 +17,7 @@ export function Work() {
           index="01"
           eyebrow="Selected work"
           title="Films, aftermovies and motion"
-          lede="Hover a card to see it move. Open one for the full film, the role and the story behind it."
+          lede="Open any one for the full film, the role and the story behind it."
         />
         <StaggerGrid className="grid gap-x-6 gap-y-12 md:grid-cols-2">
           {projects.map((p, i) => (
