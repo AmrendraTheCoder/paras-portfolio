@@ -10,8 +10,9 @@ create or replace function public.is_admin()
 returns boolean language sql stable as $$
   select coalesce(
     (auth.jwt() ->> 'email') in (
-      -- EDIT THIS LIST. One quoted email per line, comma-separated.
-      'paras@example.com'
+      -- ▼▼▼ EDIT THIS: the email(s) that may sign in to /admin. ▼▼▼
+      -- One quoted email per line, comma-separated. Must match ADMIN_EMAILS.
+      'CHANGE_ME@example.com'
     ), false);
 $$;
 

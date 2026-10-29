@@ -8,7 +8,8 @@
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit",
     "check-env": "node scripts/check-env.mjs",
-    "security": "node scripts/security-check.mjs"
+    "security": "node scripts/security-check.mjs",
+    "supabase:check": "node scripts/supabase-check.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
