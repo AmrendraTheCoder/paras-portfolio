@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { profile, site, socials, isPlaceholder } from "@/lib/content";
 import "./globals.css";
-import { Cursor } from "@/components/cursor";
 import { jsonLdScript } from "@/lib/json-ld";
 
 /**
@@ -120,7 +119,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         {children}
-        <Cursor />
       </body>
     </html>
   );

@@ -13,9 +13,10 @@
   --color-clay-disabled: #e6dfd8;
   --color-teal: #5db8a6;
   --color-amber: #e8a55a;
-  /* Creative accents: acid on the dark canvas, electric blue on the light. */
-  --color-acid: #c0fe04;
-  --color-electric: #1e60ff;
+  /* The accent: a warm tangerine, one step brighter on the dark canvas. No neon. */
+  --color-tangerine: #ff8a4c;
+  --color-tangerine-deep: #e2561f;
+  --color-tangerine-ink: #1a0c05;
 
   /* --- Surfaces (cream) -------------------------------------------------- */
   --color-canvas: #faf9f5;
@@ -84,10 +85,10 @@
   --fg-muted: var(--color-muted);
   --line: var(--color-hairline);
   --line-strong: var(--color-cream-strong);
-  --accent: var(--color-electric);
+  --accent: var(--color-tangerine-deep);
   /* Clay at #cc785c is a 3.1:1 pair with cream: fine for a 24px fill or a
      border, not for 11–13px type. Small accent text uses the darker step. */
-  --accent-text: #1a4fd1;
+  --accent-text: #c4480f;
   --accent-ink: #ffffff;
   --shadow-tile: 0 1px 2px rgb(20 20 19 / 0.04), 0 8px 24px -12px rgb(20 20 19 / 0.1);
   --shadow-lift: 0 2px 4px rgb(20 20 19 / 0.05), 0 24px 48px -20px rgb(20 20 19 / 0.22);
@@ -109,10 +110,10 @@
   --fg-muted: var(--color-on-dark-soft);
   --line: #26262c;
   --line-strong: #34343b;
-  --accent: var(--color-acid);
+  --accent: var(--color-tangerine);
   /* On the dark canvas the base accent already clears AA, so no darker step. */
-  --accent-text: var(--color-acid);
-  --accent-ink: #0b0b0c;
+  --accent-text: var(--color-tangerine);
+  --accent-ink: var(--color-tangerine-ink);
   --shadow-tile: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.55);
   --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.45), 0 24px 48px -20px rgb(0 0 0 / 0.7);
   --grain-opacity: 0.055;
@@ -603,114 +604,6 @@
   }
 }
 
-/* ---------------------------------------------------------------------------
-   The pointer.
-
-   A coral dot inside a ring that trails it. Over anything clickable the dot
-   turns white and the ring opens into a coral outline; over a field the ring
-   becomes a caret. No labels, no fills, no per-brand colours: a cursor that
-   reads as a caption competes with the page it is pointing at.
-
-   Deliberately NOT `mix-blend-mode`. Two attempts failed, and the second is the
-   instructive one:
-
-     1. `filter: invert(1)` on a blended element creates a stacking context,
-        which isolates it, and an isolated element does not blend at all.
-     2. Removing the filter did not help either, because the parent
-        `.cursor-layer` is `position: fixed; z-index: 9999`, and that is itself
-        a stacking context. An element only blends with the backdrop inside its
-        own stacking context, and the inside of that layer is empty. So the
-        bodies differenced against nothing and painted plain white, which on the
-        cream theme is an invisible cursor on a white page.
-
-   Solid colour plus a halo instead. No ancestor can switch that off.
---------------------------------------------------------------------------- */
-.cursor-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-}
-
-/* Applied only after the component mounts. If the script never runs, the
-   browser keeps its own cursor, which is the difference between a stylish
-   pointer and a page you cannot use. */
-.has-cursor,
-.has-cursor * {
-  cursor: none !important;
-}
-
-.cursor-dot,
-.cursor-ring {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  border-radius: 999px;
-  will-change: transform;
-  transition:
-    background-color 160ms var(--ease-out-quint),
-    border-color 160ms var(--ease-out-quint),
-    opacity 180ms linear;
-}
-
-/* Coral at rest. The halo keeps it legible crossing a dark image or the coral
-   button itself, where a flat coral dot would disappear into its own colour. */
-.cursor-dot {
-  width: 9px;
-  height: 9px;
-  background: var(--accent);
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--bg) 72%, transparent);
-}
-
-/* White over anything clickable. The ring behind it is only an outline now, so
-   the dot keeps a ring of ink around it instead of a background-coloured halo:
-   white on cream with a cream halo is a white dot on a white page. */
-.cursor-dot[data-mode="link"] {
-  background: #fff;
-  box-shadow: 0 0 0 1.5px var(--fg);
-}
-
-/* The caret does the work in a field; the dot would only be a speck on it. */
-.cursor-dot[data-mode="text"] {
-  opacity: 0 !important;
-}
-
-.cursor-ring {
-  /* 32px base, 1.45 on hover, so the widest it ever gets is ~46px. */
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid var(--fg);
-  box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent);
-}
-
-/* Opens, and that is all. The coral fill was doing too much for a state that
-   only needs to say "this does something". */
-/* Opens a little, and takes the accent. The weight change does the work, not
-   the size: a thicker coral ring reads as "this does something" at a glance,
-   where a large one reads as an obstruction.
-
-   No fill of any kind. A tint was tried and is still a fill, and it is also the
-   one thing that makes the ring compete with whatever it is sitting on. */
-.cursor-ring[data-mode="link"] {
-  border-width: 2px;
-  border-color: var(--accent);
-  background: transparent;
-}
-
-.cursor-ring[data-mode="text"] {
-  width: 2px;
-  height: 30px;
-  border-radius: 1px;
-  border: 0;
-  background: var(--fg);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent);
-}
-
-/* The clock's colon. Blinks on the minute the way a desk clock does, which is
-   the cheapest possible signal that the number is live rather than printed. */
 @keyframes clock-blink {
   0%, 45% { opacity: 1; }
   55%, 100% { opacity: 0.25; }

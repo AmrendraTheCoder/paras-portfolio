@@ -283,7 +283,7 @@ export const projects: Project[] = [
     story: "[PLACEHOLDER one-line story]",
     status: "released",
     badge: "Client work",
-    tint: "#c0fe04",
+    tint: "#ff8a4c",
     video: {
       full: "[PLACEHOLDER YouTube unlisted URL]",
       previewMp4: "/videos/client-1-preview.mp4",
@@ -364,7 +364,7 @@ export const leadership = {
       title: "A hackathon drawn entirely in vectors.",
       body:
         "LNMHACKS 9.0 took the opposite direction: sharp, modern, vector art from the identity down to the website, so a technical event looked as precise as the work inside it.",
-      tint: "#c0fe04",
+      tint: "#1e60ff",
       draft: true,
     },
     {
@@ -399,7 +399,7 @@ export const experience: Role[] = [
     role: "Creative Head",
     period: "[PLACEHOLDER dates]",
     line: "Creative direction for the hackathon’s vector-art identity.",
-    tint: "#c0fe04",
+    tint: "#1e60ff",
   },
   {
     org: "VIVACITY",

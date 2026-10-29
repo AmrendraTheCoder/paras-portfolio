@@ -28,7 +28,7 @@ export default function OpenGraphImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 18, fontSize: 22, letterSpacing: 4, color: "#9a9aa3" }}>
-          <div style={{ width: 48, height: 6, background: "#c0fe04" }} />
+          <div style={{ width: 48, height: 6, background: "#ff8a4c" }} />
           MOTION DESIGN · PHOTOGRAPHY · {profile.city.toUpperCase()}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
