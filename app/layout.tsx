@@ -1,19 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Archivo, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { profile, site, socials, isPlaceholder } from "@/lib/content";
 import "./globals.css";
 import { Cursor } from "@/components/cursor";
 import { jsonLdScript } from "@/lib/json-ld";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+/**
+ * Space Grotesk carries the display: geometric, a little odd, the right voice
+ * for vector art and motion. Archivo does the reading. Both are variable fonts,
+ * so one file each covers every weight used.
+ */
+const archivo = Archivo({ subsets: ["latin"], variable: "--font-archivo", display: "swap" });
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-  display: "swap",
-});
+const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-grotesk", display: "swap" });
 
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
@@ -107,7 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`dark ${inter.variable} ${newsreader.variable} ${jetbrains.variable}`}
+      className={`dark ${archivo.variable} ${grotesk.variable} ${jetbrains.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />

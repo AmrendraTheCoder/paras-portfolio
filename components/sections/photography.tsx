@@ -3,9 +3,12 @@ import { GhostWord } from "@/components/ghost-word";
 import { Reveal } from "@/components/reveal";
 import { MasonryGallery } from "@/components/media/masonry-gallery";
 import { ArrowUpRightIcon } from "@/components/icons";
-import { photographyInstagram, photos, isPlaceholder } from "@/lib/content";
+import { photographyInstagram, isPlaceholder } from "@/lib/content";
+import { getPhotos } from "@/lib/photos";
 
-export function Photography() {
+/** Server component: the gallery is read from /public/photos at build time. */
+export async function Photography() {
+  const photos = await getPhotos();
   const ig = photographyInstagram;
   const missing = isPlaceholder(ig.href);
 
@@ -19,7 +22,13 @@ export function Photography() {
           title="Hinged to photography too"
           lede="A selection of stills. Tap any one to see it large."
         />
-        <MasonryGallery photos={photos} />
+        {photos.length ? (
+          <MasonryGallery photos={photos} />
+        ) : (
+          <p className="rounded-[var(--radius-xl)] border border-dashed border-[var(--line-strong)] p-8 text-center font-mono text-[12px] uppercase tracking-[0.14em] text-[var(--fg-muted)]">
+            [PLACEHOLDER: drop photographs into /public/photos]
+          </p>
+        )}
         <Reveal className="mt-10 flex justify-center">
           {missing ? (
             <span className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-5 py-3 font-mono text-[12px] uppercase tracking-[0.14em] text-[var(--fg-muted)] opacity-70">

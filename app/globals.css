@@ -45,9 +45,8 @@
   --color-error: #c64545;
 
   /* --- Type ------------------------------------------------------------- */
-  --font-display: "Copernicus", "Tiempos Headline", var(--font-serif), ui-serif,
-    Georgia, serif;
-  --font-sans: "StyreneB", var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", monospace;
 
   /* --- Radii ------------------------------------------------------------- */
@@ -158,10 +157,10 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 700;
     color: var(--fg);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
   }
 
   ::selection {
@@ -261,6 +260,24 @@
     padding-inline: clamp(20px, 5vw, 48px);
   }
 
+  /* Hollow display type: the second half of the name, the footer wordmark. */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--fg);
+    paint-order: stroke fill;
+  }
+
+  /* A strip of film: sprocket holes along both long edges. */
+  .film-strip {
+    --hole: color-mix(in oklab, var(--fg) 14%, transparent);
+    background-image:
+      repeating-linear-gradient(90deg, var(--hole) 0 12px, transparent 12px 28px),
+      repeating-linear-gradient(90deg, var(--hole) 0 12px, transparent 12px 28px);
+    background-size: 100% 8px, 100% 8px;
+    background-position: 8px 0, 8px 100%;
+    background-repeat: repeat-x;
+  }
+
   .shell-narrow {
     width: 100%;
     max-width: 760px;
@@ -286,6 +303,16 @@
 
 .marquee-track {
   animation: marquee var(--marquee-duration, 46s) linear infinite;
+}
+
+/* The four theme posters in the hero drift very slowly; stopped under reduced motion below. */
+@keyframes drift {
+  from { background-position: 0% 50%, 0 0; }
+  to   { background-position: 100% 50%, 0 0; }
+}
+@keyframes shimmer {
+  from { background-position: 0 0; }
+  to   { background-position: 48px 48px; }
 }
 
 /* Hard stop for every animation when the OS asks for one. */

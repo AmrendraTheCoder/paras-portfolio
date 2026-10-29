@@ -1,70 +1,84 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { Showreel } from "@/components/media/showreel";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { profile, showreel } from "@/lib/content";
+import { RotatingWord } from "@/components/rotating-word";
+import { ThemePoster } from "@/components/theme-poster";
+import { Marquee } from "@/components/marquee";
+import { heroLine, profile, themes, ticker } from "@/lib/content";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
- * The hero is the showreel. Everything else in it is a caption: the name, the
- * one-line positioning, and the city. The name arrives as an ink wipe and the
- * video frame fades up behind it; nothing else moves, because the reel is the
- * motion.
+ * No showreel yet, so the hero is the name, a sentence that keeps changing its
+ * last word, and four posters painted from the four event themes. The posters
+ * are the reel for now: the worlds the films were cut for.
  */
 export function Hero() {
   const reduced = useReducedMotion();
+  const up = (delay: number) => ({
+    initial: reduced ? false : { opacity: 0, y: 18 },
+    animate: reduced ? undefined : { opacity: 1, y: 0 },
+    transition: { duration: 0.8, ease: EASE, delay },
+  });
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-24 pb-16 sm:pt-28 sm:pb-24">
+    <section id="hero" className="relative overflow-hidden pt-24 sm:pt-28">
       <div className="shell relative !max-w-[1400px]">
         <div className="absolute right-[clamp(20px,5vw,48px)] top-0 z-20">
           <ThemeToggle compact />
         </div>
 
-        <div className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
-          <motion.h1
-            initial={reduced ? false : { clipPath: "inset(0 100% 0 0)", filter: "blur(10px)", y: 8 }}
-            animate={reduced ? undefined : { clipPath: "inset(0 0% 0 0)", filter: "blur(0px)", y: 0 }}
-            transition={{ duration: 1.1, ease: EASE, delay: 0.1 }}
-            className="font-display text-[clamp(3.6rem,12vw,9.5rem)] uppercase italic leading-[0.86] tracking-[-0.04em] text-[var(--fg)]"
-          >
-            {profile.name}
-          </motion.h1>
+        <motion.p {...up(0)} className="eyebrow mb-6 flex items-center gap-3">
+          <span className="h-px w-8 bg-[var(--accent)]" aria-hidden />
+          {profile.role}
+        </motion.p>
 
-          <motion.div
-            initial={reduced ? false : { opacity: 0, y: 8 }}
-            animate={reduced ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.7 }}
-            className="sm:max-w-[34ch] sm:pb-3 sm:text-right"
+        <h1 className="font-display font-bold uppercase leading-[0.84] tracking-[-0.045em]">
+          <motion.span
+            initial={reduced ? false : { clipPath: "inset(0 100% 0 0)", y: 10 }}
+            animate={reduced ? undefined : { clipPath: "inset(0 0% 0 0)", y: 0 }}
+            transition={{ duration: 1.0, ease: EASE, delay: 0.1 }}
+            className="block text-[clamp(4rem,14.5vw,12.5rem)] text-[var(--fg)]"
           >
-            <p className="text-[clamp(1.05rem,1.6vw,1.3rem)] leading-[1.35] text-[var(--fg)]">
-              {profile.tagline}
-            </p>
-            <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--fg-muted)]">
-              {profile.location}
-            </p>
-          </motion.div>
+            {profile.first}
+          </motion.span>
+          <motion.span
+            initial={reduced ? false : { clipPath: "inset(0 100% 0 0)", y: 10 }}
+            animate={reduced ? undefined : { clipPath: "inset(0 0% 0 0)", y: 0 }}
+            transition={{ duration: 1.0, ease: EASE, delay: 0.3 }}
+            className="text-outline block text-[clamp(4rem,14.5vw,12.5rem)]"
+          >
+            {profile.last}
+          </motion.span>
+        </h1>
+
+        <div className="mt-10 grid gap-8 sm:mt-12 lg:grid-cols-12 lg:items-end">
+          <motion.p
+            {...up(0.55)}
+            className="font-display text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium leading-[1.1] tracking-[-0.025em] text-[var(--fg)] lg:col-span-7"
+          >
+            {heroLine.before} <RotatingWord words={heroLine.words} /> {heroLine.after}
+          </motion.p>
+          <motion.p {...up(0.7)} className="max-w-[40ch] text-[16px] leading-[1.6] text-[var(--fg-muted)] lg:col-span-4 lg:col-start-9">
+            Motion design, photography and graphic design for fests, hackathons and clients. Currently Creative Head of VIVACITY and LNMHACKS 9.0.
+          </motion.p>
         </div>
 
-        <motion.div
-          initial={reduced ? false : { opacity: 0, y: 24 }}
-          animate={reduced ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: 0.35 }}
-        >
-          <Showreel video={showreel} title={`${profile.name} showreel`} />
-        </motion.div>
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:mt-16 sm:gap-4 lg:grid-cols-4">
+          {themes.map((t, i) => (
+            <ThemePoster key={t.slug} theme={t} index={i} />
+          ))}
+        </div>
+      </div>
 
-        {/* The supplied bio, as the only paragraph text above the work. The
-            first paragraph is the voice; the next two are the facts. */}
-        <motion.div
-          initial={reduced ? false : { opacity: 0, y: 16 }}
-          animate={reduced ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.9 }}
-          className="mt-14 grid gap-8 sm:mt-20 lg:grid-cols-12"
-        >
-          <p className="font-display text-[clamp(1.35rem,2.3vw,1.9rem)] leading-[1.3] tracking-[-0.015em] text-[var(--fg)] lg:col-span-6">
+      <motion.div {...up(0.9)} className="mt-14 sm:mt-16">
+        <Marquee items={ticker} />
+      </motion.div>
+
+      <div className="shell !max-w-[1400px]">
+        <motion.div {...up(1.0)} className="grid gap-8 py-16 sm:py-20 lg:grid-cols-12">
+          <p className="font-display text-[clamp(1.3rem,2.2vw,1.8rem)] font-medium leading-[1.3] tracking-[-0.015em] text-[var(--fg)] lg:col-span-6">
             {profile.bio[0]}
           </p>
           <div className="space-y-5 text-[16px] leading-[1.65] text-[var(--fg-muted)] lg:col-span-5 lg:col-start-8">
