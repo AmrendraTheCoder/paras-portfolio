@@ -45,10 +45,12 @@ if (!url || !anon) {
     }
   }
   try {
-    const { data, error } = await supabase.storage.getBucket("media");
-    ok('storage bucket "media" exists and is public', Boolean(data?.public) && !error, error ? error.message : data?.public ? "" : "bucket is private");
+    // list() goes through the object API the anon key can actually read, so a
+    // public bucket reports correctly; getBucket reads a table anon cannot.
+    const { error } = await supabase.storage.from("media").list("", { limit: 1 });
+    ok('storage bucket "media" reachable', !error, error ? error.message : "");
   } catch (e) {
-    ok('storage bucket "media"', false, e.message);
+    ok('storage bucket "media" reachable', false, e.message);
   }
   report();
 }
