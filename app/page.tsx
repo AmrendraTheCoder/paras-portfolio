@@ -8,13 +8,17 @@ import { Experience } from "@/components/sections/experience";
 import { Tools } from "@/components/sections/tools";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
+import { getSocials } from "@/lib/data";
 
 /**
  * The order is the brief's: the reel, then the work it is cut from, then the
  * stills, then the people side, then the history, then the tools in one line,
  * then how to get in touch. Text stays short so the videos lead.
  */
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const socials = await getSocials();
   return (
     <>
       <Nav />
@@ -26,7 +30,7 @@ export default function Home() {
         <Leadership />
         <Experience />
         <Tools />
-        <Contact />
+        <Contact socials={socials} />
         <Footer />
       </main>
     </>

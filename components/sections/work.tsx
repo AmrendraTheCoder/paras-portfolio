@@ -2,7 +2,7 @@ import { SectionHeader } from "@/components/section-header";
 import { GhostWord } from "@/components/ghost-word";
 import { Reveal } from "@/components/reveal";
 import { WorkCard } from "@/components/media/work-card";
-import { projects } from "@/lib/content";
+import { getProjects } from "@/lib/data";
 
 /**
  * The asymmetric three-column canvas from the LNMHACKS sponsor grid: a wide
@@ -16,7 +16,8 @@ const SLOTS = [
   ["", "", ""],
 ] as const;
 
-export function Work() {
+export async function Work() {
+  const projects = await getProjects();
   const [p0, p1, p2, p3, p4, ...rest] = projects;
 
   return (

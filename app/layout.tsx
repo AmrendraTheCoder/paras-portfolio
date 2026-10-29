@@ -3,6 +3,7 @@ import { Archivo, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { profile, site, socials, isPlaceholder } from "@/lib/content";
 import "./globals.css";
 import { jsonLdScript } from "@/lib/json-ld";
+import { SmoothScroll } from "@/components/smooth-scroll";
 
 /**
  * Space Grotesk carries the display: geometric, a little odd, the right voice
@@ -118,6 +119,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
+        <SmoothScroll />
         {children}
       </body>
     </html>

@@ -1,12 +1,14 @@
 import { SocialLink } from "@/components/social-link";
-import { profile, site, socials, isPlaceholder } from "@/lib/content";
+import { profile, site, isPlaceholder } from "@/lib/content";
+import { getSocials } from "@/lib/data";
 
 /**
  * The footer is the last frame: the name set hollow and enormous, bleeding off
  * the bottom, with the links and the sign-off laid over it. No city, no
  * counters, nothing that is not a way to reach him.
  */
-export function Footer() {
+export async function Footer() {
+  const socials = await getSocials();
   const year = new Date().getFullYear();
   const emailMissing = isPlaceholder(profile.email);
 

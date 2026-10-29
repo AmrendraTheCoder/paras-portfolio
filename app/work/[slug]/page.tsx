@@ -6,19 +6,22 @@ import { Footer } from "@/components/sections/footer";
 import { Reveal } from "@/components/reveal";
 import { CaseVideo } from "@/components/media/case-video";
 import { ArrowUpRightIcon } from "@/components/icons";
-import { projects, projectBySlug, site, isPlaceholder } from "@/lib/content";
+import { site, isPlaceholder } from "@/lib/content";
+import { getProjects, getProjectBySlug } from "@/lib/data";
 import { jsonLdScript } from "@/lib/json-ld";
 import { youtubeId } from "@/lib/video";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
+export const revalidate = 60;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const projects = await getProjects();
   return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const p = projectBySlug(slug);
+  const p = await getProjectBySlug(slug);
   if (!p) return {};
   const description = isPlaceholder(p.story)
     ? `${p.title}: ${p.role}. ${p.client}, ${p.year}.`
@@ -49,6 +52,7 @@ function Fact({ label, value }: { label: string; value: string }) {
  */
 export default async function WorkPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const projects = await getProjects();
   const index = projects.findIndex((p) => p.slug === slug);
   if (index === -1) notFound();
   const p = projects[index];

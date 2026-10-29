@@ -5,11 +5,11 @@ import { GhostWord } from "@/components/ghost-word";
 import { SectionHeader } from "@/components/section-header";
 import { SocialLink } from "@/components/social-link";
 import { StaggerGrid, StaggerItem } from "@/components/reveal";
-import { profile, socials, isPlaceholder } from "@/lib/content";
+import { profile, isPlaceholder, type Social } from "@/lib/content";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-export function Contact() {
+export function Contact({ socials }: { socials: Social[] }) {
   const reduced = useReducedMotion();
   const emailMissing = isPlaceholder(profile.email);
 

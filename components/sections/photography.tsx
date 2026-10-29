@@ -3,13 +3,13 @@ import { GhostWord } from "@/components/ghost-word";
 import { Reveal } from "@/components/reveal";
 import { MasonryGallery } from "@/components/media/masonry-gallery";
 import { ArrowUpRightIcon } from "@/components/icons";
-import { photographyInstagram, isPlaceholder } from "@/lib/content";
-import { getPhotos } from "@/lib/photos";
+import { isPlaceholder } from "@/lib/content";
+import { getGalleryPhotos, getPhotographyLink } from "@/lib/data";
 
 /** Server component: the gallery is read from /public/photos at build time. */
 export async function Photography() {
-  const photos = await getPhotos();
-  const ig = photographyInstagram;
+  const photos = await getGalleryPhotos();
+  const ig = await getPhotographyLink();
   const missing = isPlaceholder(ig.href);
 
   return (

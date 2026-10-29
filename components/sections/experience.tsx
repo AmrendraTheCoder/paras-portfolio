@@ -1,7 +1,8 @@
 import { SectionHeader } from "@/components/section-header";
 import { GhostWord } from "@/components/ghost-word";
 import { StaggerGrid, StaggerItem } from "@/components/reveal";
-import { experience, isPlaceholder } from "@/lib/content";
+import { isPlaceholder } from "@/lib/content";
+import { getTimeline } from "@/lib/data";
 
 /**
  * The timeline as a strip of film. Four frames side by side on a desktop,
@@ -9,7 +10,8 @@ import { experience, isPlaceholder } from "@/lib/content";
  * mono, the organisation large, then one or two lines. On a phone the strip
  * turns vertical and the holes run down the sides.
  */
-export function Experience() {
+export async function Experience() {
+  const experience = await getTimeline();
   return (
     <section id="experience" className="band relative overflow-hidden section-rhythm scroll-mt-24">
       <GhostWord align="left">Path</GhostWord>
