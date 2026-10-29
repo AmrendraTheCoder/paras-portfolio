@@ -32,7 +32,9 @@ const csp = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // React's dev tooling needs eval; production never does, so it is only
+  // allowed while `next dev` is running.
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${VIDEO_IMAGE_HOSTS.join(" ")}`,
   `media-src 'self' blob: ${VIDEO_MEDIA_HOSTS.join(" ")}`,
