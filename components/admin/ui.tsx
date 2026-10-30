@@ -52,7 +52,7 @@ export function Btn({ children, variant = "solid" }: { children: React.ReactNode
       : variant === "danger"
         ? "border border-[var(--line)] text-[var(--color-error)] hover:border-[var(--color-error)]"
         : "border border-[var(--line)] text-[var(--fg)] hover:border-[var(--fg-muted)]";
-  return <button className={`rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors ${v}`}>{children}</button>;
+  return <button type="submit" className={`rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors ${v}`}>{children}</button>;
 }
 
 const SECTIONS = [
