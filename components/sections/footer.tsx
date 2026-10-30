@@ -1,5 +1,6 @@
 import { SocialLink } from "@/components/social-link";
 import { FooterRevealNav } from "@/components/footer-reveal-nav";
+import { MorphBackground } from "@/components/morph-background";
 import { profile, site, isPlaceholder } from "@/lib/content";
 import { getSocials } from "@/lib/data";
 
@@ -14,8 +15,9 @@ export async function Footer() {
   const emailMissing = isPlaceholder(profile.email);
 
   return (
-    <footer className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--bg)]">
-      <div className="shell relative pt-16 sm:pt-24">
+    <footer id="contact" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--bg)] scroll-mt-24">
+      <MorphBackground />
+      <div className="shell relative z-10 pt-16 sm:pt-24">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="eyebrow">Next frame</p>

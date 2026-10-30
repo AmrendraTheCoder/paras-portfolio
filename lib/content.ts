@@ -439,14 +439,18 @@ export type Tool = {
   tint: string;
   /** An original geometric glyph — the site draws its own marks, not product logos. */
   shape: "blob" | "triangle" | "square" | "hex" | "disc";
+  /** Optional: a logo image you add to /public/tools/ (e.g. the official SVG).
+      When the file exists it shows instead of the glyph; otherwise the glyph
+      stays. The site does not ship any third-party logos itself. */
+  logo?: string;
 };
 
 export const tools: Tool[] = [
-  { name: "After Effects", href: "https://www.adobe.com/products/aftereffects.html", note: "Where the motion happens: titles, transitions, the aftermovie's moving parts", discipline: "Motion", tint: "#ff8a4c", shape: "blob" },
-  { name: "Premiere Pro", href: "https://www.adobe.com/products/premiere.html", note: "The edit: every aftermovie is cut here first", discipline: "Edit", tint: "#1e60ff", shape: "triangle" },
-  { name: "Photoshop", href: "https://www.adobe.com/products/photoshop.html", note: "Stills, posters and the grade on photographs", discipline: "Image", tint: "#22d3ee", shape: "square" },
-  { name: "Illustrator", href: "https://www.adobe.com/products/illustrator.html", note: "Vectors: the LNMHACKS 9.0 identity was drawn here", discipline: "Vector", tint: "#ff2d87", shape: "hex" },
-  { name: "Figma", href: "https://www.figma.com", note: "Layouts, decks and anything the team edits together", discipline: "Design", tint: "#c0fe04", shape: "disc" },
+  { name: "After Effects", href: "https://www.adobe.com/products/aftereffects.html", note: "Where the motion happens: titles, transitions, the aftermovie's moving parts", discipline: "Motion", tint: "#ff8a4c", shape: "blob", logo: "/tools/after-effects.svg" },
+  { name: "Premiere Pro", href: "https://www.adobe.com/products/premiere.html", note: "The edit: every aftermovie is cut here first", discipline: "Edit", tint: "#1e60ff", shape: "triangle", logo: "/tools/premiere-pro.svg" },
+  { name: "Photoshop", href: "https://www.adobe.com/products/photoshop.html", note: "Stills, posters and the grade on photographs", discipline: "Image", tint: "#22d3ee", shape: "square", logo: "/tools/photoshop.svg" },
+  { name: "Illustrator", href: "https://www.adobe.com/products/illustrator.html", note: "Vectors: the LNMHACKS 9.0 identity was drawn here", discipline: "Vector", tint: "#ff2d87", shape: "hex", logo: "/tools/illustrator.svg" },
+  { name: "Figma", href: "https://www.figma.com", note: "Layouts, decks and anything the team edits together", discipline: "Design", tint: "#c0fe04", shape: "disc", logo: "/tools/figma.svg" },
 ]
 
 /* ---------------------------------------------------------------------------

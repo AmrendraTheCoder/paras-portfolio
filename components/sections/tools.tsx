@@ -32,7 +32,9 @@ function Glyph({ shape, className }: { shape: Tool["shape"]; className: string }
 
 function ToolCard({ tool, lean, onHover }: { tool: Tool; lean: number; onHover: (t: Tool | null) => void }) {
   const reduced = useReducedMotion();
+  const [logoFailed, setLogoFailed] = useState(false);
   const { ink, fill } = readableFill(tool.tint);
+  const showLogo = Boolean(tool.logo) && !logoFailed;
 
   return (
     <motion.a
@@ -59,10 +61,20 @@ function ToolCard({ tool, lean, onHover }: { tool: Tool; lean: number; onHover: 
       <span
         className="relative grid h-14 w-14 place-items-center rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--bg-raised)] transition-colors duration-[var(--duration-base)] group-hover/tool:border-transparent group-hover/tool:bg-black/10 sm:h-16 sm:w-16"
       >
-        <Glyph
-          shape={tool.shape}
-          className="h-7 w-7 transition-colors duration-[var(--duration-base)] sm:h-8 sm:w-8"
-        />
+        {showLogo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={tool.logo}
+            alt=""
+            onError={() => setLogoFailed(true)}
+            className="h-8 w-8 object-contain sm:h-9 sm:w-9"
+          />
+        ) : (
+          <Glyph
+            shape={tool.shape}
+            className="h-7 w-7 fill-[var(--fg-muted)] transition-colors duration-[var(--duration-base)] group-hover/tool:fill-[var(--on-brand)] sm:h-8 sm:w-8"
+          />
+        )}
       </span>
       <span className="relative text-center">
         <span className="block text-[13.5px] font-medium leading-tight text-[var(--fg)] transition-colors duration-[var(--duration-micro)] group-hover/tool:text-[var(--on-brand)]">

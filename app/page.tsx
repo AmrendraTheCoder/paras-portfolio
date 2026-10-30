@@ -7,9 +7,7 @@ import { Photography } from "@/components/sections/photography";
 import { Leadership } from "@/components/sections/leadership";
 import { Experience } from "@/components/sections/experience";
 import { Tools } from "@/components/sections/tools";
-import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
-import { getSocials } from "@/lib/data";
 
 /**
  * The order is the brief's: the reel, then the work it is cut from, then the
@@ -18,8 +16,7 @@ import { getSocials } from "@/lib/data";
  */
 export const revalidate = 60;
 
-export default async function Home() {
-  const socials = await getSocials();
+export default function Home() {
   return (
     <>
       <Nav />
@@ -32,7 +29,6 @@ export default async function Home() {
         <Leadership />
         <Experience />
         <Tools />
-        <Contact socials={socials} />
         <Footer />
       </main>
     </>
