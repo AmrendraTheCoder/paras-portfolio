@@ -95,7 +95,7 @@ export function HeroEditor() {
     };
   }, [reduced]);
 
-  const active = CLIPS[cut];
+  const active = CLIPS[cut] ?? CLIPS[0];
 
   const panel = "rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--bg-tile)]";
   const label = "font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg-muted)]";
