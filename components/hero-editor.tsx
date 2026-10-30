@@ -374,7 +374,7 @@ export function HeroEditor() {
                         {isAudio ? (
                           <span aria-hidden className="flex h-full w-full items-center gap-[2px] overflow-hidden">
                             {Array.from({ length: 40 }).map((_, k) => (
-                              <span key={k} className="w-[2px] shrink-0 rounded-full" style={{ height: `${20 + Math.abs(Math.sin(k * 0.9 + i)) * 60}%`, background: c.palette[2], opacity: 0.8 }} />
+                              <span key={k} className="w-[2px] shrink-0 rounded-full" style={{ height: `${(20 + Math.abs(Math.sin(k * 0.9 + i)) * 60).toFixed(2)}%`, background: c.palette[2], opacity: 0.8 }} />
                             ))}
                           </span>
                         ) : (
