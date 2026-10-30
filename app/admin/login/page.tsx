@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { BubbleLoader } from "@/components/bubble-loader";
 
 function LoginForm() {
   const router = useRouter();
@@ -34,7 +35,7 @@ function LoginForm() {
     "w-full rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--bg-raised)] px-3.5 py-3 text-[15px] text-[var(--fg)] outline-none transition-colors focus:border-[var(--accent)]";
 
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-[360px] space-y-4">
+    <form onSubmit={onSubmit} className="w-full space-y-4">
       <div>
         <h1 className="font-display text-[1.8rem] font-bold tracking-[-0.025em]">
           Paras<span className="text-[var(--accent)]">.</span>admin
@@ -61,10 +62,13 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center px-5">
-      <Suspense fallback={null}>
-        <LoginForm />
-      </Suspense>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-5">
+      <BubbleLoader />
+      <div className="relative z-10 w-full max-w-[380px] rounded-[var(--radius-bento)] border border-[var(--line)] bg-[color-mix(in_oklab,var(--bg)_70%,transparent)] p-7 shadow-[var(--shadow-lift)] backdrop-blur-xl sm:p-8">
+        <Suspense fallback={null}>
+          <LoginForm />
+        </Suspense>
+      </div>
     </div>
   );
 }
