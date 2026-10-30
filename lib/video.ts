@@ -18,6 +18,21 @@ export function youtubeId(url: string | undefined): string | null {
   return new URL(p.src).pathname.split("/").pop() ?? null;
 }
 
+/**
+ * A muted, looping, chromeless YouTube embed for a hover preview. Loops by
+ * pointing the playlist at the single id. Returns null when the link is not a
+ * usable YouTube URL (or is still a placeholder).
+ */
+export function youtubeLoopEmbed(url: string | undefined): string | null {
+  const id = youtubeId(url);
+  if (!id) return null;
+  const p = new URLSearchParams({
+    autoplay: "1", mute: "1", loop: "1", playlist: id, controls: "0",
+    modestbranding: "1", playsinline: "1", rel: "0", disablekb: "1", fs: "0",
+  });
+  return `https://www.youtube-nocookie.com/embed/${id}?${p.toString()}`;
+}
+
 export function resolvePlayable(url: string | undefined): Playable | null {
   // A slot that still reads "[PLACEHOLDER …]" is a gap, not a URL.
   if (!url || /\[(PLACEHOLDER|URL)/i.test(url)) return null;

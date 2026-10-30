@@ -20,6 +20,24 @@ async function db() {
   return supabase;
 }
 
+/**
+ * Runs a write and makes a silent failure loud. A write the database's row
+ * security rejects returns no error but changes no rows, so without this an
+ * edit looks saved and is not. `.select()` returns the affected rows; zero
+ * means the rule blocked it, which almost always means this email is not in
+ * the is_admin() list in the database (fix: run supabase/fix-admin.sql).
+ */
+async function commit<T>(query: PromiseLike<{ data: T[] | null; error: { message: string } | null }>, verb: string): Promise<T[]> {
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  if (!data || data.length === 0) {
+    throw new Error(
+      `Nothing was ${verb}. Your account is signed in but the database would not accept the change — your email is probably missing from is_admin(). Run supabase/fix-admin.sql with your email, then try again.`,
+    );
+  }
+  return data;
+}
+
 function refreshPublic(slug?: string) {
   revalidatePath("/");
   revalidatePath("/work/[slug]", "page");
@@ -66,6 +84,7 @@ export async function saveProject(form: FormData) {
     tint: str(form.get("tint")) || "#ff8a4c",
     status: str(form.get("status")) || "released",
     video_full: str(form.get("video_full")) || null,
+    preview_youtube: str(form.get("preview_youtube")) || null,
     sort: Number(str(form.get("sort")) || 0),
     published: form.get("published") === "on",
     updated_at: new Date().toISOString(),
@@ -74,17 +93,15 @@ export async function saveProject(form: FormData) {
   if (previewMp4) row.preview_mp4 = previewMp4;
   if (previewWebm) row.preview_webm = previewWebm;
 
-  const q = id ? supabase.from("projects").update(row).eq("id", id) : supabase.from("projects").insert(row);
-  const { error } = await q;
-  if (error) throw new Error(error.message);
+  const q = id ? supabase.from("projects").update(row).eq("id", id).select("id") : supabase.from("projects").insert(row).select("id");
+  await commit(q, id ? "saved" : "added");
   refreshPublic(row.slug as string);
   redirect("/admin/projects");
 }
 
 export async function deleteProject(form: FormData) {
   const supabase = await db();
-  const { error } = await supabase.from("projects").delete().eq("id", str(form.get("id")));
-  if (error) throw new Error(error.message);
+  await commit(supabase.from("projects").delete().eq("id", str(form.get("id"))).select("id"), "deleted");
   refreshPublic();
   redirect("/admin/projects");
 }
@@ -102,17 +119,15 @@ export async function saveLink(form: FormData) {
     published: form.get("published") === "on",
     updated_at: new Date().toISOString(),
   };
-  const q = id ? supabase.from("links").update(row).eq("id", id) : supabase.from("links").insert(row);
-  const { error } = await q;
-  if (error) throw new Error(error.message);
+  const q = id ? supabase.from("links").update(row).eq("id", id).select("id") : supabase.from("links").insert(row).select("id");
+  await commit(q, id ? "saved" : "added");
   revalidatePath("/");
   redirect("/admin/links");
 }
 
 export async function deleteLink(form: FormData) {
   const supabase = await db();
-  const { error } = await supabase.from("links").delete().eq("id", str(form.get("id")));
-  if (error) throw new Error(error.message);
+  await commit(supabase.from("links").delete().eq("id", str(form.get("id"))).select("id"), "deleted");
   revalidatePath("/");
   redirect("/admin/links");
 }
@@ -131,17 +146,15 @@ export async function saveTimeline(form: FormData) {
     published: form.get("published") === "on",
     updated_at: new Date().toISOString(),
   };
-  const q = id ? supabase.from("timeline").update(row).eq("id", id) : supabase.from("timeline").insert(row);
-  const { error } = await q;
-  if (error) throw new Error(error.message);
+  const q = id ? supabase.from("timeline").update(row).eq("id", id).select("id") : supabase.from("timeline").insert(row).select("id");
+  await commit(q, id ? "saved" : "added");
   revalidatePath("/");
   redirect("/admin/timeline");
 }
 
 export async function deleteTimeline(form: FormData) {
   const supabase = await db();
-  const { error } = await supabase.from("timeline").delete().eq("id", str(form.get("id")));
-  if (error) throw new Error(error.message);
+  await commit(supabase.from("timeline").delete().eq("id", str(form.get("id"))).select("id"), "deleted");
   revalidatePath("/");
   redirect("/admin/timeline");
 }
@@ -155,13 +168,12 @@ export async function uploadPhotos(form: FormData) {
   for (const f of files) {
     const path = await uploadFile("photos", f);
     if (!path) continue;
-    const { error } = await supabase.from("photos").insert({
+    await commit(supabase.from("photos").insert({
       path,
       alt: str(form.get("alt")) || f.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
       sort: base + i++,
       published: true,
-    });
-    if (error) throw new Error(error.message);
+    }).select("id"), "added");
   }
   revalidatePath("/");
   redirect("/admin/photos");
@@ -169,16 +181,15 @@ export async function uploadPhotos(form: FormData) {
 
 export async function savePhoto(form: FormData) {
   const supabase = await db();
-  const { error } = await supabase
-    .from("photos")
-    .update({
+  await commit(
+    supabase.from("photos").update({
       alt: str(form.get("alt")),
       sort: Number(str(form.get("sort")) || 0),
       published: form.get("published") === "on",
       updated_at: new Date().toISOString(),
-    })
-    .eq("id", str(form.get("id")));
-  if (error) throw new Error(error.message);
+    }).eq("id", str(form.get("id"))).select("id"),
+    "saved",
+  );
   revalidatePath("/");
   redirect("/admin/photos");
 }
@@ -188,8 +199,7 @@ export async function deletePhoto(form: FormData) {
   const id = str(form.get("id"));
   const path = str(form.get("path"));
   if (path) await supabase.storage.from(STORAGE_BUCKET).remove([path]);
-  const { error } = await supabase.from("photos").delete().eq("id", id);
-  if (error) throw new Error(error.message);
+  await commit(supabase.from("photos").delete().eq("id", id).select("id"), "deleted");
   revalidatePath("/");
   redirect("/admin/photos");
 }

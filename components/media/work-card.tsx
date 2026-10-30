@@ -5,14 +5,17 @@ import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import type { Project } from "@/lib/content";
 import { isPlaceholder } from "@/lib/content";
+import { youtubeLoopEmbed } from "@/lib/video";
 import { Poster } from "@/components/media/poster";
 
 /**
- * One project card, in the register of the LNMHACKS sponsor grid: a flat,
- * square-cornered frame, a neon tag pinned to the corner, and an editorial
- * row underneath in mono caps. On hover the frame swaps to its second state:
- * the preview loop if one exists, else the hover still, else a slow push-in.
- * Touch screens get the still; so does reduced motion. The card is the link.
+ * One project card, in the register of the LNMHACKS sponsor grid. On hover the
+ * frame swaps to its second state, in this order of what exists:
+ *   1. an uploaded preview loop (.mp4/.webm),
+ *   2. a YouTube link played muted and looping (no files to prepare),
+ *   3. a second still image,
+ *   4. a slow push-in on the poster.
+ * Touch screens and reduced motion keep the still. The card is the link.
  */
 function useCanHover() {
   const [can, setCan] = useState(false);
@@ -31,16 +34,34 @@ export function WorkCard({ project, index, wide = false }: { project: Project; i
   const canHover = useCanHover();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [failed, setFailed] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const n = String(index + 1).padStart(2, "0");
-  const live = canHover && !reduced && !failed && Boolean(project.video.previewMp4);
-  const swap = !live && Boolean(project.hoverImage);
 
-  const play = () => videoRef.current?.play().catch(() => {});
-  const stop = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.pause();
-    v.currentTime = 0;
+  const ytEmbed = youtubeLoopEmbed(project.video.previewYoutube);
+  const liveVideo = canHover && !reduced && !failed && Boolean(project.video.previewMp4);
+  const liveYt = canHover && !reduced && !liveVideo && Boolean(ytEmbed);
+  const swap = !liveVideo && !liveYt && Boolean(project.hoverImage);
+  const movesOnHover = liveVideo || liveYt || swap;
+
+  // Cover a frame whose ratio differs from the video's 16:9, so a YouTube
+  // embed fills the card instead of letterboxing.
+  const frameRatio = wide ? 16 / 9 : 4 / 3;
+  const videoRatio = 16 / 9;
+  const coverStyle: React.CSSProperties =
+    videoRatio >= frameRatio
+      ? { height: "100%", width: `${(videoRatio / frameRatio) * 100}%` }
+      : { width: "100%", height: `${(frameRatio / videoRatio) * 100}%` };
+
+  const onEnter = () => {
+    setHovered(true);
+    if (liveVideo) videoRef.current?.play().catch(() => {});
+  };
+  const onLeave = () => {
+    setHovered(false);
+    if (liveVideo && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
   };
 
   return (
@@ -48,10 +69,10 @@ export function WorkCard({ project, index, wide = false }: { project: Project; i
       href={`/work/${project.slug}`}
       className="group block cursor-pointer focus-visible:outline-none"
       style={{ "--tint": project.tint } as React.CSSProperties}
-      onPointerEnter={live ? play : undefined}
-      onPointerLeave={live ? stop : undefined}
-      onFocus={live ? play : undefined}
-      onBlur={live ? stop : undefined}
+      onPointerEnter={movesOnHover ? onEnter : undefined}
+      onPointerLeave={movesOnHover ? onLeave : undefined}
+      onFocus={movesOnHover ? onEnter : undefined}
+      onBlur={movesOnHover ? onLeave : undefined}
     >
       <figure
         className={`relative overflow-hidden border border-[var(--line)] bg-black transition-[transform,border-color,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-out-quint)] group-hover:scale-[1.01] group-hover:border-[var(--tint)] group-hover:shadow-[var(--shadow-lift)] group-focus-visible:border-[var(--tint)] ${
@@ -63,10 +84,11 @@ export function WorkCard({ project, index, wide = false }: { project: Project; i
           alt={`${project.title} poster`}
           sizes={wide ? "(min-width: 1024px) 66vw, 100vw" : "(min-width: 1024px) 33vw, 100vw"}
           className={`transition-[opacity,transform] duration-[var(--duration-slow)] ease-[var(--ease-out-quint)] ${
-            live || swap ? "group-hover:opacity-0" : "group-hover:scale-[1.04]"
+            movesOnHover ? "group-hover:opacity-0" : "group-hover:scale-[1.04]"
           }`}
         />
-        {live ? (
+
+        {liveVideo ? (
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[var(--duration-slow)] group-hover:opacity-100"
@@ -80,6 +102,24 @@ export function WorkCard({ project, index, wide = false }: { project: Project; i
             {project.video.previewWebm ? <source src={project.video.previewWebm} type="video/webm" /> : null}
             <source src={project.video.previewMp4} type="video/mp4" onError={() => setFailed(true)} />
           </video>
+        ) : liveYt ? (
+          // Mounted only while hovered, so no embed loads until there is intent.
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-[var(--duration-slow)] group-hover:opacity-100"
+          >
+            {hovered ? (
+              <iframe
+                src={ytEmbed!}
+                title=""
+                tabIndex={-1}
+                allow="autoplay; encrypted-media"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={coverStyle}
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            ) : null}
+          </span>
         ) : swap ? (
           <Poster
             src={project.hoverImage!}
@@ -89,7 +129,6 @@ export function WorkCard({ project, index, wide = false }: { project: Project; i
           />
         ) : null}
 
-        {/* Neon tag, pinned to the corner with no radius: the LNMHACKS card’s signature. */}
         <span className="pointer-events-none absolute right-0 top-0 z-10 bg-[var(--accent)] px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--accent-ink)]">
           {project.badge}
         </span>

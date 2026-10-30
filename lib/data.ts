@@ -30,6 +30,7 @@ function rowToVideo(r: Record<string, unknown>): VideoSource {
     full: (r.video_full as string) || undefined,
     previewMp4: r.preview_mp4 ? publicAsset(r.preview_mp4 as string) : undefined,
     previewWebm: r.preview_webm ? publicAsset(r.preview_webm as string) : undefined,
+    previewYoutube: (r.preview_youtube as string) || undefined,
     poster: r.poster ? publicAsset(r.poster as string) : "/posters/showreel.svg",
     aspect: [16, 9],
   };

@@ -38,6 +38,7 @@ function ProjectForm({ p }: { p?: Row }) {
         <Field label="Theme (optional)" name="theme" defaultValue={v("theme")} />
       </div>
       <Field label="Full video — unlisted YouTube URL" name="video_full" defaultValue={v("video_full")} placeholder="https://youtu.be/…" />
+      <Field label="Hover preview — YouTube link (optional, instead of uploading clips)" name="preview_youtube" defaultValue={v("preview_youtube")} placeholder="https://youtu.be/…  — plays muted & looping on hover" />
       <div className="grid gap-4 sm:grid-cols-3">
         <FileField label="Poster (1280×720)" name="poster_file" accept="image/*" hint={v("poster") ? "replace current" : "jpg / webp"} />
         <FileField label="Preview .mp4" name="preview_mp4_file" accept="video/mp4" hint="720p, muted, <2MB" />

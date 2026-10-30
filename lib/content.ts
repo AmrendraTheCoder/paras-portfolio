@@ -167,6 +167,8 @@ export type VideoSource = {
   /** Small muted loop for the card hover and the hero. */
   previewMp4?: string;
   previewWebm?: string;
+  /** A YouTube link used as the hover preview instead of uploading mp4/webm. */
+  previewYoutube?: string;
   /** Always present, so there is never an empty black box. */
   poster: string;
   /** Intrinsic ratio, so the frame reserves its space before anything loads. */

@@ -35,6 +35,7 @@ create table if not exists public.projects (
   tint        text not null default '#ff8a4c',
   status      text not null default 'released',   -- released | coming-soon
   video_full  text,                               -- unlisted YouTube URL
+  preview_youtube text,                           -- YouTube link used as the hover preview
   poster      text,                               -- storage path or /public path
   preview_mp4 text,
   preview_webm text,
