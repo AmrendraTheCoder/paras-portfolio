@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { signOut } from "@/app/admin/actions";
 
+export { Btn } from "@/components/admin/btn";
+
 const field =
   "w-full rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--bg-raised)] px-3.5 py-2.5 text-[15px] text-[var(--fg)] outline-none transition-colors focus:border-[var(--accent)]";
 
@@ -45,15 +47,6 @@ export function Toggle({ name, defaultChecked = true, label = "Published" }: { n
   );
 }
 
-export function Btn({ children, variant = "solid" }: { children: React.ReactNode; variant?: "solid" | "ghost" | "danger" }) {
-  const v =
-    variant === "solid"
-      ? "bg-[var(--accent)] text-[var(--accent-ink)] hover:opacity-90"
-      : variant === "danger"
-        ? "border border-[var(--line)] text-[var(--color-error)] hover:border-[var(--color-error)]"
-        : "border border-[var(--line)] text-[var(--fg)] hover:border-[var(--fg-muted)]";
-  return <button type="submit" className={`rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors ${v}`}>{children}</button>;
-}
 
 const SECTIONS = [
   { href: "/admin", label: "Dashboard" },

@@ -28,7 +28,7 @@ export default async function PhotosAdmin({ searchParams }: { searchParams: Prom
           </label>
           <div className="flex items-end justify-between gap-4">
             <div className="w-32"><Field label="Start sort at" name="sort" type="number" defaultValue={String(rows.length)} /></div>
-            <Btn>Upload</Btn>
+            <Btn pendingLabel="Uploading…">Upload</Btn>
           </div>
         </form>
 
