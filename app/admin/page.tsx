@@ -16,10 +16,11 @@ async function count(table: string): Promise<number | null> {
 export default async function AdminHome() {
   if (!isSupabaseConfigured) return <Unconfigured />;
   const user = await requireAdmin();
-  const [projects, photos, timeline, links] = await Promise.all([count("projects"), count("photos"), count("timeline"), count("links")]);
+  const [projects, motion, photos, timeline, links] = await Promise.all([count("projects"), count("motion_graphics"), count("photos"), count("timeline"), count("links")]);
 
   const tiles = [
     { href: "/admin/projects", label: "Projects", n: projects, note: "Films, aftermovies and client work" },
+    { href: "/admin/motion", label: "Motion graphics", n: motion, note: "Loops, titles and experiments" },
     { href: "/admin/photos", label: "Photography", n: photos, note: "Upload and order the gallery" },
     { href: "/admin/timeline", label: "Timeline", n: timeline, note: "Roles and dates" },
     { href: "/admin/links", label: "Links", n: links, note: "Instagram, LinkedIn, email" },

@@ -17,7 +17,7 @@ export function Leadership() {
       <div className="shell relative grid gap-12 lg:grid-cols-12 lg:gap-8">
         <Reveal className="lg:col-span-4 lg:sticky lg:top-28 lg:self-start">
           <div className="mb-6 flex items-center gap-4">
-            <span className="font-mono text-[12px] font-medium tracking-[0.16em] text-[var(--accent-text)]">03</span>
+            <span className="font-mono text-[12px] font-medium tracking-[0.16em] text-[var(--accent-text)]">04</span>
             <span className="h-px flex-1 bg-[var(--line)]" aria-hidden />
             <span className="eyebrow">Leadership and mentoring</span>
           </div>

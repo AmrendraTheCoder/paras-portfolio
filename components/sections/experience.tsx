@@ -16,7 +16,7 @@ export async function Experience() {
     <section id="experience" className="band relative overflow-hidden section-rhythm scroll-mt-24">
       <GhostWord align="left">Path</GhostWord>
       <div className="shell relative !max-w-[1380px]">
-        <SectionHeader index="04" eyebrow="Experience" title="Where the work has been" />
+        <SectionHeader index="05" eyebrow="Experience" title="Where the work has been" />
 
         <StaggerGrid className="film-strip grid overflow-hidden border-y-2 border-[var(--fg)] py-6 sm:py-7 lg:grid-cols-4">
           {experience.map((job, i) => (

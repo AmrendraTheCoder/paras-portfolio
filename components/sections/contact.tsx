@@ -20,7 +20,7 @@ export function Contact({ socials }: { socials: Social[] }) {
       <GhostWord align="right">Hello</GhostWord>
       <div className="shell relative z-10">
         <SectionHeader
-          index="05"
+          index="07"
           eyebrow="Contact"
           title="Say hello"
           lede="For internships, junior roles, freelance briefs, or a story that needs moving."

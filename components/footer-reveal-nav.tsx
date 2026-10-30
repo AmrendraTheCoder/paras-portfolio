@@ -17,6 +17,7 @@ import { ThemeArt } from "@/components/theme-poster";
  */
 const NAV = [
   { label: "Work", href: "#work", theme: 2 },
+  { label: "Motion", href: "#motion", theme: 3 },
   { label: "Photography", href: "#photography", theme: 1 },
   { label: "Leadership", href: "#leadership", theme: 0 },
   { label: "Experience", href: "#experience", theme: 3 },

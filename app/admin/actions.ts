@@ -204,6 +204,38 @@ export async function deletePhoto(form: FormData) {
   redirect("/admin/photos");
 }
 
+// ── Motion graphics ──────────────────────────────────────────────────────────
+export async function saveMotion(form: FormData) {
+  const supabase = await db();
+  const id = str(form.get("id"));
+  const poster = await uploadFile("motion", file(form.get("poster_file")) as File);
+  const image = await uploadFile("motion", file(form.get("image_file")) as File);
+  const row: Record<string, unknown> = {
+    title: str(form.get("title")),
+    caption: str(form.get("caption")),
+    kind: str(form.get("kind")) || "video",
+    media_youtube: str(form.get("media_youtube")) || null,
+    sort: Number(str(form.get("sort")) || 0),
+    published: form.get("published") === "on",
+    updated_at: new Date().toISOString(),
+  };
+  if (poster) row.poster = poster;
+  if (image) row.media_path = image;
+  const q = id
+    ? supabase.from("motion_graphics").update(row).eq("id", id).select("id")
+    : supabase.from("motion_graphics").insert(row).select("id");
+  await commit(q, id ? "saved" : "added");
+  revalidatePath("/");
+  redirect("/admin/motion");
+}
+
+export async function deleteMotion(form: FormData) {
+  const supabase = await db();
+  await commit(supabase.from("motion_graphics").delete().eq("id", str(form.get("id"))).select("id"), "deleted");
+  revalidatePath("/");
+  redirect("/admin/motion");
+}
+
 // ── Session ────────────────────────────────────────────────────────────────
 export async function signOut() {
   const supabase = await createClient();

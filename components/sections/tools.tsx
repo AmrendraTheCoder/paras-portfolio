@@ -81,7 +81,7 @@ export function Tools() {
   return (
     <section id="tools" className="relative section-rhythm-sm scroll-mt-24">
       <div className="shell">
-        <SectionHeader index="05" eyebrow="Tools" title="What is on the shelf" lede="The tools are only half the story." />
+        <SectionHeader index="06" eyebrow="Tools" title="What is on the shelf" lede="The tools are only half the story." />
 
         <Reveal>
           <div className="relative -mx-[clamp(20px,5vw,48px)] px-[clamp(20px,5vw,48px)]">

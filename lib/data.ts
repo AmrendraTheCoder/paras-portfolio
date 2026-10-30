@@ -4,11 +4,13 @@ import {
   projects as seedProjects,
   socials as seedSocials,
   experience as seedExperience,
+  motionGraphics as seedMotion,
   type Project,
   type Social,
   type Role,
   type Photo,
   type VideoSource,
+  type MotionGraphic,
 } from "@/lib/content";
 import { getPhotos as seedPhotos } from "@/lib/photos";
 
@@ -111,4 +113,25 @@ export async function getGalleryPhotos(): Promise<Photo[]> {
     .order("sort", { ascending: true });
   if (error || !data?.length) return seedPhotos();
   return data.map((r) => ({ src: publicAsset(r.path), width: r.width ?? 1200, height: r.height ?? 1200, alt: r.alt ?? "" }));
+}
+
+export async function getMotionGraphics(): Promise<MotionGraphic[]> {
+  const supabase = createPublicClient();
+  if (!supabase) return seedMotion;
+  const { data, error } = await supabase
+    .from("motion_graphics")
+    .select("*")
+    .eq("published", true)
+    .order("sort", { ascending: true });
+  if (error || !data?.length) return seedMotion;
+  return data.map((r) => ({
+    id: r.id,
+    title: r.title,
+    caption: r.caption ?? "",
+    kind: (r.kind as MotionGraphic["kind"]) ?? "video",
+    youtube: r.media_youtube ?? undefined,
+    src: r.media_path ? publicAsset(r.media_path) : undefined,
+    poster: r.poster ? publicAsset(r.poster) : undefined,
+    aspect: [16, 9] as const,
+  }));
 }

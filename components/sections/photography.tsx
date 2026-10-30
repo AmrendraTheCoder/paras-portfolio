@@ -17,7 +17,7 @@ export async function Photography() {
       <GhostWord align="left">Stills</GhostWord>
       <div className="shell relative">
         <SectionHeader
-          index="02"
+          index="03"
           eyebrow="Photography"
           title="Hinged to photography too"
           lede="A selection of stills. Tap any one to see it large."

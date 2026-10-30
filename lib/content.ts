@@ -488,6 +488,31 @@ export const tools: Tool[] = [
 ];
 
 /* ---------------------------------------------------------------------------
+   Motion graphics. A gallery Paras uploads to from /admin: short motion pieces
+   (a YouTube link that hover-plays and opens fullscreen) or stills. Until rows
+   exist in the database the seed below shows, so the section is never empty.
+   ------------------------------------------------------------------------ */
+export type MotionGraphic = {
+  id?: string;
+  title: string;
+  caption?: string;
+  kind: "video" | "image";
+  /** For a video item: a YouTube link, hover-plays and opens fullscreen. */
+  youtube?: string;
+  /** For an image item, or a video poster: a URL or /public path. */
+  src?: string;
+  poster?: string;
+  aspect: readonly [number, number];
+};
+
+export const motionGraphics: MotionGraphic[] = [
+  { title: "[PLACEHOLDER motion piece]", caption: "[PLACEHOLDER — title & type]", kind: "video", youtube: "[PLACEHOLDER YouTube link]", poster: "/posters/showreel.svg", aspect: [16, 9] },
+  { title: "[PLACEHOLDER motion piece]", caption: "[PLACEHOLDER]", kind: "video", youtube: "[PLACEHOLDER YouTube link]", poster: "/posters/vivacity-25.svg", aspect: [16, 9] },
+  { title: "[PLACEHOLDER motion piece]", caption: "[PLACEHOLDER]", kind: "video", youtube: "[PLACEHOLDER YouTube link]", poster: "/posters/desportivos-25.svg", aspect: [16, 9] },
+  { title: "[PLACEHOLDER still]", caption: "[PLACEHOLDER]", kind: "image", src: "/posters/vivacity-26.svg", aspect: [16, 9] },
+];
+
+/* ---------------------------------------------------------------------------
    Site. The URL is provisional until the Vercel project exists.
    ------------------------------------------------------------------------ */
 export const site = {
@@ -501,6 +526,7 @@ export const site = {
     "motion designer",
     "motion design intern",
     "motion graphics Jaipur",
+    "motion graphics reel",
     "photographer Jaipur",
     "aftermovie",
     "After Effects",

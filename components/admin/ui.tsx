@@ -58,6 +58,7 @@ export function Btn({ children, variant = "solid" }: { children: React.ReactNode
 const SECTIONS = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/projects", label: "Projects" },
+  { href: "/admin/motion", label: "Motion" },
   { href: "/admin/photos", label: "Photography" },
   { href: "/admin/timeline", label: "Timeline" },
   { href: "/admin/links", label: "Links" },

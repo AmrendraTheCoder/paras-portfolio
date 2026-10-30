@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   motion,
-  useMotionValue,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -18,13 +17,9 @@ import { WorkCard } from "@/components/media/work-card";
 /**
  * Selected work as a horizontal reel.
  *
- * On a desktop with a fine pointer the section pins and the panels travel
- * sideways as you scroll down, skewing and springing with the scroll velocity
- * so the row feels like it has weight — the Jesper Landberg horizontal-scroll
- * idea, rebuilt on this site's motion stack so it coexists with the page's
- * smooth scroll. On touch and under reduced motion it is an ordinary
- * swipeable, snapping row with none of the pinning. Same cards either way, so
- * the hover previews and links are unchanged.
+ * Desktop with a fine pointer: the section pins and the panels travel sideways
+ * as you scroll, with a gentle velocity skew and a progress rail. Touch and
+ * reduced motion get a swipeable snapping row. Same cards either way.
  */
 export function WorkShowcase({ projects }: { projects: Project[] }) {
   const reduced = useReducedMotion();
@@ -41,26 +36,19 @@ export function WorkShowcase({ projects }: { projects: Project[] }) {
   return pin ? <Pinned projects={projects} /> : <Swipe projects={projects} />;
 }
 
-function Panel({ project, index, offset }: { project: Project; index: number; offset: string }) {
+function Panel({ project, index }: { project: Project; index: number }) {
   return (
-    <div className="flex w-[clamp(300px,34vw,560px)] shrink-0 items-center" style={{ transform: `translateY(${offset})` }}>
-      <div className="w-full">
-        <WorkCard project={project} index={index} />
-      </div>
+    <div className="w-[clamp(300px,30vw,440px)] shrink-0">
+      <WorkCard project={project} index={index} />
     </div>
   );
 }
-
-// Fixed vertical offsets give the row rhythm, like the reference's staggered slides.
-const OFFSETS = ["-4%", "6%", "-2%", "8%", "0%", "4%"];
 
 function Pinned({ projects }: { projects: Project[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [metrics, setMetrics] = useState({ travel: 0, height: 0 });
 
-  // Measure how far the track must travel, and set the spacer height so that
-  // horizontal travel maps 1:1 onto the vertical scroll while pinned.
   useEffect(() => {
     const measure = () => {
       const track = trackRef.current;
@@ -68,7 +56,8 @@ function Pinned({ projects }: { projects: Project[] }) {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
       const travel = Math.max(0, track.scrollWidth - vw);
-      setMetrics({ travel, height: travel + vh });
+      // Pad the scroll distance a little so the ends breathe before release.
+      setMetrics({ travel, height: travel + vh * 1.1 });
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -81,41 +70,46 @@ function Pinned({ projects }: { projects: Project[] }) {
   }, [projects.length]);
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
-  const xRaw = useTransform(scrollYProgress, [0, 1], [0, -metrics.travel]);
-  const x = useSpring(xRaw, { stiffness: 140, damping: 28, restDelta: 0.5 });
+  const xRaw = useTransform(scrollYProgress, [0.04, 0.96], [0, -metrics.travel]);
+  const x = useSpring(xRaw, { stiffness: 160, damping: 30, restDelta: 0.5 });
 
-  // Velocity drives a little skew and a vertical squash, the reference's feel.
   const vel = useVelocity(x);
-  const skew = useSpring(useTransform(vel, [-3000, 0, 3000], [5, 0, -5]), { stiffness: 200, damping: 30 });
-  const squash = useSpring(useTransform(vel, (v) => 1 - Math.min(Math.abs(v) * 0.00004, 0.06)), { stiffness: 200, damping: 30 });
-  const progress = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const skew = useSpring(useTransform(vel, [-3000, 0, 3000], [3.5, 0, -3.5]), { stiffness: 200, damping: 34 });
+  const progress = useTransform(scrollYProgress, [0.04, 0.96], ["0%", "100%"]);
 
   return (
-    <section id="work" ref={sectionRef} className="relative" style={{ height: metrics.height || "100vh" }}>
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-        <GhostWord align="right">Work</GhostWord>
-        <div className="shell relative w-full">
+    <section id="work" ref={sectionRef} className="relative bg-[var(--bg)]" style={{ height: metrics.height || "100vh" }}>
+      <div className="sticky top-0 flex h-screen flex-col overflow-hidden pt-24">
+        <div className="shell relative w-full shrink-0">
+          <GhostWord align="right">Work</GhostWord>
           <SectionHeader index="01" eyebrow="Selected work" title="Films, aftermovies and motion" />
         </div>
 
-        <motion.div
-          ref={trackRef}
-          style={{ x, skewX: skew, scaleY: squash }}
-          className="flex origin-left items-center gap-6 pl-[clamp(20px,5vw,48px)] pr-[25vw] will-change-transform"
-        >
-          {projects.map((p, i) => (
-            <Panel key={p.slug} project={p} index={i} offset={OFFSETS[i % OFFSETS.length]} />
-          ))}
-        </motion.div>
+        {/* The reel, vertically centred in the space left under the header. */}
+        <div className="flex min-h-0 flex-1 items-center">
+          <motion.div
+            ref={trackRef}
+            style={{ x, skewX: skew }}
+            className="flex origin-left items-center gap-10 pl-[clamp(20px,5vw,48px)] pr-[32vw] will-change-transform"
+          >
+            {projects.map((p, i) => (
+              <Panel key={p.slug} project={p} index={i} />
+            ))}
+          </motion.div>
+        </div>
 
-        {/* Progress rail, like the reference's scrollbar handle. */}
-        <div className="shell mt-8 w-full">
-          <div className="relative h-px w-full bg-[var(--line)]">
+        <div className="shell w-full shrink-0 pb-10">
+          <div className="flex items-center justify-between gap-4">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--fg-muted)]">
+              Scroll to move <span aria-hidden>→</span>
+            </p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--fg-muted)]">
+              {projects.length} projects
+            </p>
+          </div>
+          <div className="relative mt-3 h-px w-full bg-[var(--line)]">
             <motion.div className="absolute inset-y-0 left-0 bg-[var(--accent)]" style={{ width: progress }} />
           </div>
-          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--fg-muted)]">
-            Scroll · {projects.length} projects
-          </p>
         </div>
       </div>
     </section>
@@ -136,7 +130,7 @@ function Swipe({ projects }: { projects: Project[] }) {
       </div>
       <div className="-mx-[clamp(20px,5vw,48px)] flex snap-x snap-mandatory gap-5 overflow-x-auto px-[clamp(20px,5vw,48px)] pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {projects.map((p, i) => (
-          <div key={p.slug} className="w-[78vw] shrink-0 snap-start sm:w-[46vw]">
+          <div key={p.slug} className="w-[80vw] shrink-0 snap-start sm:w-[48vw]">
             <WorkCard project={p} index={i} />
           </div>
         ))}
