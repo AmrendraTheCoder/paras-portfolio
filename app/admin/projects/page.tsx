@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured, publicAsset } from "@/lib/supabase/config";
-import { AdminHeader, Unconfigured, PageTitle, Field, Area, FileField, Toggle, Btn, shell, card } from "@/components/admin/ui";
+import { AdminHeader, Unconfigured, PageTitle, Alert, Field, Area, FileField, Toggle, Btn, shell, card } from "@/components/admin/ui";
 import { saveProject, deleteProject } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
@@ -52,7 +52,8 @@ function ProjectForm({ p }: { p?: Row }) {
   );
 }
 
-export default async function ProjectsAdmin() {
+export default async function ProjectsAdmin({ searchParams }: { searchParams: Promise<{ error?: string; saved?: string }> }) {
+  const sp = await searchParams;
   if (!isSupabaseConfigured) return <Unconfigured />;
   const user = await requireAdmin();
   const supabase = await createClient();
@@ -64,6 +65,7 @@ export default async function ProjectsAdmin() {
       <AdminHeader email={user.email} />
       <main className={shell}>
         <PageTitle title="Projects" />
+        <Alert error={sp.error} saved={sp.saved === "1"} />
         <details className={`${card} mb-6`}>
           <summary className="cursor-pointer text-[15px] font-medium text-[var(--accent-text)]">+ Add a new project</summary>
           <div className="mt-5"><ProjectForm /></div>

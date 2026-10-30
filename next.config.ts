@@ -71,6 +71,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Admin uploads (posters, photos, short preview loops) go through server
+  // actions; the default 1MB request cap rejects them, so raise it.
+  experimental: { serverActions: { bodySizeLimit: "25mb" } },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85],

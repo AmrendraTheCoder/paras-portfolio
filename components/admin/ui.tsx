@@ -113,5 +113,23 @@ export function PageTitle({ title, action }: { title: string; action?: React.Rea
   );
 }
 
+export function Alert({ error, saved }: { error?: string; saved?: boolean }) {
+  if (error) {
+    return (
+      <div role="alert" className="mb-6 rounded-[var(--radius-md)] border border-[var(--color-error)] bg-[color-mix(in_oklab,var(--color-error)_12%,transparent)] px-4 py-3 text-[14px] leading-[1.5] text-[var(--color-error)]">
+        {error}
+      </div>
+    );
+  }
+  if (saved) {
+    return (
+      <div role="status" className="mb-6 rounded-[var(--radius-md)] border border-[var(--accent)] bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] px-4 py-3 text-[14px] text-[var(--accent-text)]">
+        Saved. The live site updates within a minute.
+      </div>
+    );
+  }
+  return null;
+}
+
 export const card = "rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--bg-tile)] p-5";
 export const shell = "mx-auto max-w-[1100px] px-5 py-8";

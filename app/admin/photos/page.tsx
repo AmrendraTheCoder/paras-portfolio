@@ -1,13 +1,14 @@
 import { requireAdmin } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured, publicAsset } from "@/lib/supabase/config";
-import { AdminHeader, Unconfigured, PageTitle, Field, Toggle, Btn, shell, card } from "@/components/admin/ui";
+import { AdminHeader, Unconfigured, PageTitle, Alert, Field, Toggle, Btn, shell, card } from "@/components/admin/ui";
 import { uploadPhotos, savePhoto, deletePhoto } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
 type Row = Record<string, string | boolean | number | null>;
 
-export default async function PhotosAdmin() {
+export default async function PhotosAdmin({ searchParams }: { searchParams: Promise<{ error?: string; saved?: string }> }) {
+  const sp = await searchParams;
   if (!isSupabaseConfigured) return <Unconfigured />;
   const user = await requireAdmin();
   const supabase = await createClient();
@@ -19,6 +20,7 @@ export default async function PhotosAdmin() {
       <AdminHeader email={user.email} />
       <main className={shell}>
         <PageTitle title="Photography" />
+        <Alert error={sp.error} saved={sp.saved === "1"} />
         <form action={uploadPhotos} className={`${card} mb-8 grid gap-4`}>
           <label className="block">
             <span className="mb-1.5 block text-[13px] font-medium text-[var(--fg-muted)]">Upload photos (select several at once)</span>

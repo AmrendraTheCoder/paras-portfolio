@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured, publicAsset } from "@/lib/supabase/config";
-import { AdminHeader, Unconfigured, PageTitle, Field, FileField, Toggle, Btn, shell, card } from "@/components/admin/ui";
+import { AdminHeader, Unconfigured, PageTitle, Alert, Field, FileField, Toggle, Btn, shell, card } from "@/components/admin/ui";
 import { saveMotion, deleteMotion } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +37,8 @@ function MotionForm({ r }: { r?: Row }) {
   );
 }
 
-export default async function MotionAdmin() {
+export default async function MotionAdmin({ searchParams }: { searchParams: Promise<{ error?: string; saved?: string }> }) {
+  const sp = await searchParams;
   if (!isSupabaseConfigured) return <Unconfigured />;
   const user = await requireAdmin();
   const supabase = await createClient();
@@ -48,6 +49,7 @@ export default async function MotionAdmin() {
       <AdminHeader email={user.email} />
       <main className={shell}>
         <PageTitle title="Motion graphics" />
+        <Alert error={sp.error} saved={sp.saved === "1"} />
         <details className={`${card} mb-6`}>
           <summary className="cursor-pointer text-[15px] font-medium text-[var(--accent-text)]">+ Add a motion piece</summary>
           <div className="mt-5"><MotionForm /></div>
