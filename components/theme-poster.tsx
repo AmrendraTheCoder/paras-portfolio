@@ -8,7 +8,7 @@ import type { Theme } from "@/lib/content";
  * three colours each theme owns. They stand in for a showreel until there is
  * one: not the films themselves, but the worlds the films were cut for.
  */
-function Art({ theme }: { theme: Theme }) {
+export function ThemeArt({ theme }: { theme: Theme }) {
   const [a, b, c] = theme.palette;
 
   if (theme.look === "melange") {
@@ -118,7 +118,7 @@ export function ThemePoster({ theme, index }: { theme: Theme; index: number }) {
       className="group relative aspect-[4/5] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-black shadow-[var(--shadow-tile)]"
       style={{ "--tint": theme.palette[0] } as React.CSSProperties}
     >
-      <Art theme={theme} />
+      <ThemeArt theme={theme} />
       <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-white backdrop-blur">
         {label}
       </span>

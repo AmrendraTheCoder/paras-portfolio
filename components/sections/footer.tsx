@@ -1,11 +1,12 @@
 import { SocialLink } from "@/components/social-link";
+import { FooterRevealNav } from "@/components/footer-reveal-nav";
 import { profile, site, isPlaceholder } from "@/lib/content";
 import { getSocials } from "@/lib/data";
 
 /**
- * The footer is the last frame: the name set hollow and enormous, bleeding off
- * the bottom, with the links and the sign-off laid over it. No city, no
- * counters, nothing that is not a way to reach him.
+ * The footer: a large index whose links reveal their world on hover, then the
+ * email and social links, and the hollow wordmark as the last frame. No city,
+ * nothing that is not a way to reach him or a way back into the work.
  */
 export async function Footer() {
   const socials = await getSocials();
@@ -14,65 +15,65 @@ export async function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--bg)]">
-      <div className="shell relative pt-20 sm:pt-28">
-        <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-7">
+      <div className="shell relative pt-16 sm:pt-24">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+          <div>
             <p className="eyebrow">Next frame</p>
-            <h2 className="mt-4 max-w-[14ch] text-[clamp(2.2rem,5vw,4rem)] leading-[0.98]">
+            <h2 className="mt-3 max-w-[16ch] text-[clamp(1.8rem,4vw,3rem)] leading-[1.0]">
               Got a story that needs moving<span className="text-[var(--accent)]">?</span>
             </h2>
-            <div className="mt-7">
-              {emailMissing ? (
-                <span className="inline-flex items-center rounded-full bg-[var(--accent)] px-6 py-3.5 text-[15px] font-medium text-[var(--accent-ink)] opacity-70">
-                  [EMAIL] · placeholder
-                </span>
-              ) : (
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="inline-flex items-center rounded-full bg-[var(--accent)] px-6 py-3.5 text-[15px] font-medium text-[var(--accent-ink)] shadow-[var(--shadow-tile)] transition-[transform,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-out-quint)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]"
-                >
-                  {profile.email}
-                </a>
-              )}
-            </div>
           </div>
-
-          <div className="md:col-span-4 md:col-start-9">
-            <p className="eyebrow">Elsewhere</p>
-            <ul className="mt-4 divide-y divide-[var(--line)] border-y border-[var(--line)]">
-              {socials.map((s) => {
-                const missing = isPlaceholder(s.href);
-                const external = s.href.startsWith("http");
-                return (
-                  <li key={s.label}>
-                    {missing ? (
-                      <span className="flex items-center justify-between py-3 text-[15px] text-[var(--fg-muted)] opacity-60">
-                        {s.label}
-                        <span className="font-mono text-[10px] uppercase tracking-[0.14em]">[URL]</span>
-                      </span>
-                    ) : (
-                      <a
-                        href={s.href}
-                        target={external ? "_blank" : undefined}
-                        rel={external ? "noopener noreferrer" : undefined}
-                        className="group flex items-center justify-between py-3 text-[15px] text-[var(--fg)] transition-colors hover:text-[var(--accent-text)]"
-                      >
-                        {s.label}
-                        <span aria-hidden className="transition-transform duration-[var(--duration-base)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
-                      </a>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          {emailMissing ? (
+            <span className="inline-flex items-center rounded-full bg-[var(--accent)] px-6 py-3.5 text-[15px] font-medium text-[var(--accent-ink)] opacity-70">
+              [EMAIL] · placeholder
+            </span>
+          ) : (
+            <a
+              href={`mailto:${profile.email}`}
+              className="inline-flex items-center rounded-full bg-[var(--accent)] px-6 py-3.5 text-[15px] font-medium text-[var(--accent-ink)] shadow-[var(--shadow-tile)] transition-[transform,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-out-quint)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]"
+            >
+              {profile.email}
+            </a>
+          )}
         </div>
-      </div>
 
-      {/* Full-bleed wordmark: one line, centred, sized to the viewport so the
-          whole name shows once and never overflows the right edge. */}
-      <div className="relative w-full overflow-hidden" aria-hidden>
-        <p className="text-outline pointer-events-none mt-12 mb-[-0.24em] select-none whitespace-nowrap text-center font-display text-[13.2vw] font-bold uppercase leading-[0.8] tracking-[-0.03em] opacity-55 sm:mt-16">
+        {/* The index, with the hover image reveal. */}
+        <FooterRevealNav />
+
+        {/* Social links. */}
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+          <p className="eyebrow">Elsewhere</p>
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            {socials.map((s) => {
+              const missing = isPlaceholder(s.href);
+              const external = s.href.startsWith("http");
+              return (
+                <li key={s.label}>
+                  {missing ? (
+                    <span className="inline-flex items-center gap-2 text-[14px] text-[var(--fg-muted)] opacity-60">
+                      {s.label} <span className="font-mono text-[10px] uppercase tracking-[0.14em]">[URL]</span>
+                    </span>
+                  ) : (
+                    <a
+                      href={s.href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      className="group inline-flex items-center gap-2 text-[14px] text-[var(--fg)] transition-colors hover:text-[var(--accent-text)]"
+                    >
+                      {s.label}
+                      <span aria-hidden className="transition-transform duration-[var(--duration-base)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <p
+          aria-hidden
+          className="text-outline pointer-events-none mt-14 mb-[-0.24em] select-none whitespace-nowrap text-center font-display text-[13.2vw] font-bold uppercase leading-[0.8] tracking-[-0.03em] opacity-55 sm:mt-16"
+        >
           {profile.first} {profile.last}
         </p>
       </div>
