@@ -1,4 +1,5 @@
 import { Nav } from "@/components/nav";
+import { SiteLoader } from "@/components/site-loader";
 import { ScrollDot } from "@/components/scroll-dot";
 import { Hero } from "@/components/sections/hero";
 import { Work } from "@/components/sections/work";
@@ -19,6 +20,7 @@ export const revalidate = 60;
 export default function Home() {
   return (
     <>
+      <SiteLoader />
       <Nav />
       <ScrollDot />
       <main id="main" className="relative z-10">
