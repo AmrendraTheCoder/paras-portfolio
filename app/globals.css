@@ -675,3 +675,33 @@
     background-image: linear-gradient(120deg, var(--c1), var(--c2), var(--c3));
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Morphing blobs. A few large, heavily blurred radial fields whose rounded
+   shape and position drift slowly, so the background behind the contact
+   section feels alive without competing with the type. Off entirely under
+   reduced motion, where they hold a still shape.
+--------------------------------------------------------------------------- */
+.morph-blob {
+  position: absolute;
+  border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+  filter: blur(64px);
+  will-change: transform, border-radius;
+}
+@keyframes blobMorph {
+  0%, 100% {
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    border-radius: 60% 40% 38% 62% / 57% 36% 64% 43%;
+    transform: translate3d(4%, 5%, 0) rotate(120deg) scale(1.08);
+  }
+  66% {
+    border-radius: 35% 65% 55% 45% / 55% 60% 40% 45%;
+    transform: translate3d(-5%, 3%, 0) rotate(240deg) scale(0.95);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .morph-blob { animation: blobMorph var(--dur, 26s) ease-in-out infinite; }
+}

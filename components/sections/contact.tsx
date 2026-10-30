@@ -6,6 +6,7 @@ import { SectionHeader } from "@/components/section-header";
 import { SocialLink } from "@/components/social-link";
 import { StaggerGrid, StaggerItem } from "@/components/reveal";
 import { profile, isPlaceholder, type Social } from "@/lib/content";
+import { MorphBackground } from "@/components/morph-background";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -15,8 +16,9 @@ export function Contact({ socials }: { socials: Social[] }) {
 
   return (
     <section id="contact" className="band relative overflow-hidden section-rhythm scroll-mt-24">
+      <MorphBackground />
       <GhostWord align="right">Hello</GhostWord>
-      <div className="shell relative">
+      <div className="shell relative z-10">
         <SectionHeader
           index="05"
           eyebrow="Contact"
