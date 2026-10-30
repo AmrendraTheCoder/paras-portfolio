@@ -94,7 +94,7 @@ export function Tools() {
   return (
     <section id="tools" className="relative section-rhythm scroll-mt-24">
       <div className="shell">
-        <SectionHeader index="06" eyebrow="Tools" title="What is on the shelf" lede="The toolkit behind the motion, the stills and the vectors. The tools are only half the story." />
+        <SectionHeader index="05" eyebrow="Tools" title="What is on the shelf" lede="The toolkit behind the motion, the stills and the vectors. The tools are only half the story." />
 
         <Reveal>
           <div className="relative mx-auto max-w-[920px]">

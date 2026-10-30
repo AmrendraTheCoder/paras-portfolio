@@ -44,7 +44,6 @@ export function ExperienceTimeline({ roles }: { roles: Role[] }) {
   const current = roles[active] ?? roles[0];
   if (!current) return null;
 
-  const jump = (i: number) => rows.current[i]?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
 
   return (
     <section
@@ -74,7 +73,7 @@ export function ExperienceTimeline({ roles }: { roles: Role[] }) {
         <div className="shell relative !max-w-[1380px] py-20 sm:py-28">
           {/* header */}
           <div className="mb-14 flex items-center gap-4 sm:mb-20">
-            <span className="font-mono text-[12px] font-medium tracking-[0.16em] text-[var(--o)]">05</span>
+            <span className="font-mono text-[12px] font-medium tracking-[0.16em] text-[var(--o)]">04</span>
             <span className="h-px flex-1 bg-white/15" aria-hidden />
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/55">Experience</span>
           </div>
@@ -132,33 +131,6 @@ export function ExperienceTimeline({ roles }: { roles: Role[] }) {
                     </AnimatePresence>
                   </div>
 
-                  {/* index: one tick per role, the active one orange */}
-                  <ul className="mt-8 space-y-1 border-t border-white/10 pt-6">
-                    {roles.map((r, i) => (
-                      <li key={`${r.org}-${i}`}>
-                        <button
-                          type="button"
-                          onClick={() => jump(i)}
-                          className="group flex w-full items-center gap-4 py-1.5 text-left"
-                        >
-                          <span
-                            className="h-px transition-all duration-500"
-                            style={{
-                              width: i === active ? 40 : 16,
-                              background: i === active ? ORANGE : "rgba(255,255,255,0.25)",
-                            }}
-                          />
-                          <span
-                            className={`font-mono text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
-                              i === active ? "text-white" : "text-white/40 group-hover:text-white/75"
-                            }`}
-                          >
-                            {r.org}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             </div>

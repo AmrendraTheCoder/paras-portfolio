@@ -5,7 +5,6 @@ import { Hero } from "@/components/sections/hero";
 import { Work } from "@/components/sections/work";
 import { MotionGraphics } from "@/components/sections/motion-graphics";
 import { Photography } from "@/components/sections/photography";
-import { Leadership } from "@/components/sections/leadership";
 import { Experience } from "@/components/sections/experience";
 import { Tools } from "@/components/sections/tools";
 import { Footer } from "@/components/sections/footer";
@@ -28,7 +27,6 @@ export default function Home() {
         <Work />
         <MotionGraphics />
         <Photography />
-        <Leadership />
         <Experience />
         <Tools />
         <Footer />

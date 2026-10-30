@@ -11,7 +11,6 @@ const LINKS = [
   // the scroll does is a nav that lies about where you are.
   { label: "Work", href: "#work" },
   { label: "Photography", href: "#photography" },
-  { label: "Leadership", href: "#leadership" },
   { label: "Experience", href: "#experience" },
   { label: "Contact", href: "#contact" },
 ];
