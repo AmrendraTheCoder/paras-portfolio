@@ -54,8 +54,8 @@ export function FooterRevealNav() {
   const theme = active !== null ? themes[NAV[active].theme] : null;
 
   return (
-    <div ref={wrap} className="relative" onPointerMove={show ? onMove : undefined}>
-      <ul className="relative z-10 -my-1">
+    <div ref={wrap} className="relative mx-auto max-w-[1000px]" onPointerMove={show ? onMove : undefined}>
+      <ul className="relative z-10">
         {NAV.map((n, i) => (
           <li key={n.label} className="border-b border-[var(--line)] first:border-t">
             <Link
@@ -63,17 +63,15 @@ export function FooterRevealNav() {
               onPointerEnter={() => show && setActive(i)}
               onPointerLeave={() => show && setActive(null)}
               style={{ ["--tint" as string]: themes[n.theme].palette[0] }}
-              className="group flex items-center justify-between gap-6 py-4 sm:py-5"
+              className="group relative flex items-center justify-center py-6 sm:py-8"
             >
-              <span className="flex items-baseline gap-4">
-                <span className="font-mono text-[11px] text-[var(--fg-muted)]">{String(i + 1).padStart(2, "0")}</span>
-                <span className="font-display text-[clamp(2rem,6vw,4.5rem)] font-bold uppercase leading-[0.95] tracking-[-0.03em] text-[var(--fg)] transition-all duration-[var(--duration-base)] group-hover:text-[var(--tint)] sm:group-hover:translate-x-3">
-                  {n.label}
-                </span>
+              <span className="absolute left-0 font-mono text-[11px] text-[var(--fg-muted)]">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-display text-[clamp(2rem,6vw,4.5rem)] font-bold uppercase leading-[0.95] tracking-[-0.03em] text-[var(--fg)] transition-colors duration-[var(--duration-base)] group-hover:text-[var(--tint)]">
+                {n.label}
               </span>
               <span
                 aria-hidden
-                className="font-display text-[clamp(1.4rem,3vw,2.2rem)] text-[var(--fg-muted)] transition-all duration-[var(--duration-base)] group-hover:text-[var(--tint)] group-hover:translate-x-1 group-hover:-translate-y-1"
+                className="absolute right-0 font-display text-[clamp(1.3rem,3vw,2rem)] text-[var(--fg-muted)] transition-all duration-[var(--duration-base)] group-hover:text-[var(--tint)] group-hover:translate-x-1 group-hover:-translate-y-1"
               >
                 ↗
               </span>

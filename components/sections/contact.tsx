@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { GhostWord } from "@/components/ghost-word";
 import { SectionHeader } from "@/components/section-header";
 import { SocialLink } from "@/components/social-link";
 import { StaggerGrid, StaggerItem } from "@/components/reveal";
@@ -17,7 +16,6 @@ export function Contact({ socials }: { socials: Social[] }) {
   return (
     <section id="contact" className="band relative overflow-hidden section-rhythm scroll-mt-24">
       <MorphBackground />
-      <GhostWord align="right">Hello</GhostWord>
       <div className="shell relative z-10">
         <SectionHeader
           index="07"
